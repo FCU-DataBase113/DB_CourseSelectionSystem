@@ -6,19 +6,20 @@ import MySQLdb
 from flask import render_template
 from flask import redirect
 from flask import url_for
-wrong = [0]
 
+wrong = [0]
+id = [0]
 app = Flask(__name__)
 
 if __name__ == '__main__':
     app.run(debug = True,host = "0.0.0.0",port = 5000)
 # 連接資料庫
-def sql_log(db_name):
+def sql_log():
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
-                           user="hj",
-                           passwd="test1234",
-                           db=db_name)
+                           user="DBAdmin",
+                           passwd="123",
+                           db='courseselectionsystem')
     return conn
 @app.route('/')
 def index():
@@ -27,21 +28,24 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    mylist = ["資訊工程學系","電機工程學系","電子工程學系","自動控制工程學系","資訊電機學院學士班","通訊工程學系","光電科學與工程學系","通識中心","應用數學學系","統計學系"]
+
     if request.method == 'POST':
+        id[0] += 1
         username = request.form.get('username')
-        password = request.form.get('password')
+        department = request.form.get('department')
         # 在這裡處理註冊邏輯
-        if insert_user(username, password):
+        if insert_user(id[0],username, department):
             return redirect(url_for('index'))
         else:
             return redirect(url_for('error'))
-    return render_template('register.html')
+    return render_template('register.html', class_list = mylist)
 
 @app.route('/action', methods=['POST'])
 def action():
     # 取得輸入的文字
     my_head = request.form.get("my_head")
-    conn = sql_log('testdb')
+    conn = sql_log()
     # 欲查詢的 query 指令
     query = "SELECT description FROM people where name LIKE '{}%';".format(
         my_head)
@@ -83,31 +87,25 @@ def login():
             wrong[0] = 1
             return redirect(url_for('error'))
     return render_template('login.html')
-def insert_user(username, password):
+def insert_user(id,username, department):
     # 建立連接
-    conn = sql_log('userdb')
+    conn = sql_log()
+    userid = id
     name = username
-    passwd = password
+    depart = department
     # 欲新增的 query 指令
-    query = "INSERT INTO user_acc (name, passwd) VALUES ('{}', '{}');".format(
-        name, passwd)
+    query = "INSERT INTO user (user_id,user_name, department) VALUES ('{}', '{}', '{}');".format(
+    userid, name, depart)
     # 執行新增，並且尋找如果有相同的名字就不新增，並且跳到錯誤頁面
     # 要先執行查詢，再執行新增，不然會有問題
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM user_acc WHERE name = '{}';".format(name))
-    result = cursor.fetchone()
-    if result is None:
-        # 如果查詢結果為 None，則表示資料庫中沒有該名稱，可以新增
-        cursor.execute(query)
-        conn.commit()
-        return True
-    else:
-        # 如果查詢結果不為 None，則表示資料庫中已存在該名稱，不應新增
-        return False
+    cursor.execute(query)
+    conn.commit()
+    return True
     
 def check_user(username, password):
     # 建立連接
-    conn = sql_log('userdb')
+    conn = sql_log()
     name = username
     passwd = password
     # 欲查詢的 query 指令
