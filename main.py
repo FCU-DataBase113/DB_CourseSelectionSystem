@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 if __name__ == '__main__':
     app.run(debug = True,host = "0.0.0.0",port = 5000)
+
 # 連接資料庫
 def sql_log(db_name):
     # 建立資料庫連線
@@ -20,11 +21,13 @@ def sql_log(db_name):
                            passwd="test1234",
                            db=db_name)
     return conn
+
+# 初始畫面
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
+# 註冊帳號
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -37,6 +40,7 @@ def register():
             return redirect(url_for('error'))
     return render_template('register.html')
 
+# 查詢介面
 @app.route('/action', methods=['POST'])
 def action():
     # 取得輸入的文字
@@ -57,6 +61,7 @@ def action():
         results += "<p>{}</p>".format(description)
     return results
 
+# 錯誤頁面
 @app.route('/error', methods=['GET','POST'])
 def error():
     if wrong[0] == 0:
@@ -71,6 +76,7 @@ def error():
         """
     return results
 
+# 登入帳號
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -83,6 +89,8 @@ def login():
             wrong[0] = 1
             return redirect(url_for('error'))
     return render_template('login.html')
+
+# 註冊使用者
 def insert_user(username, password):
     # 建立連接
     conn = sql_log('userdb')
@@ -105,6 +113,7 @@ def insert_user(username, password):
         # 如果查詢結果不為 None，則表示資料庫中已存在該名稱，不應新增
         return False
     
+# 查詢使用者
 def check_user(username, password):
     # 建立連接
     conn = sql_log('userdb')

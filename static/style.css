@@ -77,8 +77,8 @@ span{
     color: rgb(0, 0, 0);
     background-color: rgba(255, 255, 255, 0.6);
     background-blend-mode: multiply;
-
 }
+
 input{
     outline: none;
     border: none;
@@ -86,6 +86,8 @@ input{
     padding: 1%;
     border: 1px solid rgb(0, 0, 0);
 }
+
+
 button{
     color: rgb(255, 255, 255);
     padding: 3%;
