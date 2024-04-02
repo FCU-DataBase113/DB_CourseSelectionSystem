@@ -9,11 +9,18 @@
 <body>
     <div class="wrapper">
         <form method="post" action="/register">
-            用戶名：<input name="username">                 <br>
-            密碼：<input name="password" type="password">   <br>
+            用戶名：<input name="username"><br />
+            <select id="department" name="department">
+                <option>請選擇你的系所</option>
+                {% for class_item in class_list %}
+                    <option>{{ class_item }}</option>
+                {% endfor %}
+            </select><br />
             <input type="submit" value="註冊">
         </form>
+        
     </div>
+    
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

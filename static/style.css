@@ -46,25 +46,7 @@ nav a:hover {
 span{
     color: red;
 }
-.img{
-    float: left;
-    top: -40%;
-    width: 300px;
-    height: 168px;
-    border: 1px solid rgb(0, 0, 0);
-}
-.img2{
-    float: right;
-    width: 350px;
-    height: 144px;
-    border: 1px solid rgb(0, 0, 0);
-}
-.img3{
-    position: absolute;
-    top: -40%;
-    left: 50%;
-    transform:translate(-50%,0%);
-}
+
 .wrap{
     margin:0 auto;
 }
