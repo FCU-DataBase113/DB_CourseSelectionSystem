@@ -1,3 +1,4 @@
+use courseselectionsystem;
 CREATE TABLE user_acc (
     ID VARCHAR(8),
     name VARCHAR(255),

@@ -87,12 +87,15 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         # 在這裡處理登入邏輯
+        # 成功跳到course_selection的畫面
         if check_user(username, password):
-            return redirect(url_for('index'))
+            return redirect(url_for('course_selection'))
         else:
             wrong[0] = 1
             return redirect(url_for('error'))
     return render_template('login.html')
+
+# 新增使用者
 def insert_user(id,username, department):
     # 建立連接
     conn = sql_log()
@@ -129,5 +132,7 @@ def check_user(username, password):
         # 如果查詢結果不為 None，則表示資料庫中已存在該名稱，可以登入
         return True
     
-    
-    
+# 課程選擇
+@app.route('/course_selection', methods=['GET', 'POST']) 
+def course_selection():
+    return render_template('CourseSelection.html')
