@@ -1,0 +1,101 @@
+body{
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url(nice.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+}
+nav > ul {
+    background-color: rgb(230, 230, 230, 0.6);
+    list-style: none;   /* 移除項目符號 */
+    margin: 0;
+    padding: 0;
+}
+nav a {
+    color: inherit; /* 移除超連結顏色 */
+    display: block; /* 讓 <a> 填滿 <li> */
+    font-size: 1.2rem;
+    padding: 15px;
+    text-decoration: none;  /* 移除超連結底線 */
+}
+nav a:hover {
+    background-color: rgb(115, 115, 115, 0.6);
+    color: white;
+}
+.float-nav-outer {
+    background-color: rgb(230, 230, 230, 0.6);
+    overflow: hidden;
+    
+}
+.float-nav {
+    position: relative;
+    left: 50%;
+    float: left;
+}
+
+.float-nav > li {
+    float: left;
+    position: relative;
+    right: 50%;
+}
+
+span{
+    color: red;
+}
+.img{
+    float: left;
+    top: -40%;
+    width: 300px;
+    height: 168px;
+    border: 1px solid rgb(0, 0, 0);
+}
+.img2{
+    float: right;
+    width: 350px;
+    height: 144px;
+    border: 1px solid rgb(0, 0, 0);
+}
+.img3{
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    transform:translate(-50%,0%);
+}
+.wrap{
+    margin:0 auto;
+}
+.wrapper{
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform:translate(-50%, -50%);
+    padding: 3%;
+    color: rgb(0, 0, 0);
+    background-color: rgba(255, 255, 255, 0.6);
+    background-blend-mode: multiply;
+
+}
+input{
+    outline: none;
+    border: none;
+    width: 45%;
+    padding: 1%;
+    border: 1px solid rgb(0, 0, 0);
+}
+button{
+    color: rgb(255, 255, 255);
+    padding: 3%;
+    border: 2px solid white;
+    background: black;
+    display: block;
+    position: relative;
+    margin-top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    cursor: pointer;    
+}
+
