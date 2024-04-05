@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    
     <h1>選課系統</h1>
     <!-- 加選表單 -->
     <h2>加選課程</h2>
@@ -116,14 +117,18 @@
     </form>
 
     <script>
+        // 確保網頁已經載入完畢
         $(document).ready(function() {
+            // 當使用者按下選擇按鈕時
             $("#submitButton").click(function(event) {
+                // 防止表單預設的提交行為
                 event.preventDefault();  
-        
+                // 發送異步的HTTP請求 發送了一個POST請求到URL為'/get_courses'的後端接口，並將表單數據序列化後作為請求數據
                 $.ajax({
                     url: '/get_courses',
                     type: 'POST',
                     data: $('#selectForm').serialize(), 
+                    // 指定請求成功時要執行的函數
                     success: function(response) {
                         var courses = response; 
                         var html = '<table><tr><th>課程名稱</th><th>學分</th></tr>';
@@ -131,6 +136,7 @@
                             html += '<tr><td>' + courses[i].title + '</td><td>' + courses[i].credits + '</td></tr>';
                         }
                         html += '</table>';
+                        // 將寫好的，插入 dataDisplay 元素中
                         $('#dataDisplay').html(html);
                     }
                 });

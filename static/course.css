@@ -1,13 +1,36 @@
+body {
+    font-family: Arial, sans-serif; /* 使用Arial字體 */
+    background-color: #f4f4f4; /* 設置背景顏色 */
+    padding: 20px; /* 添加一些內邊距 */
+}
+h1, h2, label {
+    color: #333; /* 設置標題和標籤的文字顏色 */
+    font-weight: bold; /* 加粗標題和標籤的文字 */
+}
+select, button {
+    font-family: Arial, sans-serif; /* 使用Arial字體 */
+    font-size: 16px; /* 設置字體大小 */
+    padding: 8px 12px; /* 添加一些內邊距 */
+    border: 1px solid #ccc; /* 添加邊框 */
+    border-radius: 4px; /* 圓角邊框 */
+    background-color: #fff; /* 白色背景 */
+}
+button {
+    cursor: pointer; /* 顯示手型游標 */
+    background-color: #007bff; /* 按鈕背景顏色 */
+    color: #fff; /* 按鈕文字顏色 */
+    border: none; /* 移除按鈕邊框 */
+    transition: background-color 0.3s; /* 添加動畫效果 */
+}
+button:hover {
+    background-color: #0056b3; /* 按鈕懸停時的背景顏色 */
+}
 table {
-    border-collapse: collapse;
-    width: 100%;
-    border: 2px solid black; /* 添加表格邊框 */
+    width: 100%; /* 表格寬度填滿容器 */
+    border-collapse: collapse; /* 合併邊框 */
 }
 th, td {
-    border: 1px solid black;
-    padding: 8px;
-    text-align: center;
-}
-th {
-    background-color: #f2f2f2;
+    padding: 10px; /* 添加一些內邊距 */
+    border: 1px solid #ccc; /* 添加邊框 */
+    text-align: center; /* 文字居中對齊 */
 }
