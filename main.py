@@ -22,7 +22,7 @@ def sql_log():
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
                            #WU
-                           port = 3307,
+                        #    port = 3307,
                            user="DBAdmin",
                            passwd="123",
                            db='courseselectionsystem')
@@ -142,19 +142,26 @@ def check_user(username, password):
 def course_selection():
     return render_template('CourseSelection.html')
 
-#0405
+# 顯示該系所的課程
 @app.route('/get_courses', methods=['POST'])
 def get_courses():
+    # 從course的表單獲取選擇的系所 id
     selected_department_name = request.form['course']
+    # 測試是否獲取到系所 id
+    print("Selected department name:", selected_department_name)  
     conn = sql_log()
+    # 建立 cursor 物件 - 字典
     cursor = conn.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT dept_id FROM department WHERE dept_name = %s;", (selected_department_name,))
+    # 運用 SQL 語法查詢該系所的 id
+    cursor.execute("SELECT dept_id FROM course WHERE dept_id = %s;", (selected_department_name,))
     dept_result = cursor.fetchone()  
+    # 有無找到相關資訊
     if dept_result:
         dept_id = dept_result['dept_id'] 
         cursor.execute("SELECT * FROM course WHERE dept_id = %s;", (dept_id,))
         courses = cursor.fetchall()
-        
         return jsonify(courses)
     else:
-        return jsonify({"error": "Department not found"}), 404
+        error_msg = {"error": "Course not found"}
+        return jsonify(error_msg), 404
+
