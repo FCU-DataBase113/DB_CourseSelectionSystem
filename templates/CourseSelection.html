@@ -12,23 +12,19 @@
     <h1>選課系統</h1>
     <!-- 加選表單 -->
     <h2>加選課程</h2>
-    <form action="#" method="POST">
-        <label for="course">選擇課程：</label>
+    <!-- 顯示系所課程 -->
+    <form id="selectForm" action="/get_courses" method="POST">
+        <label for="course">選擇系所：</label>
         <select id="course" name="course">
+            <!--內容先少少的-->
             <option value="course1">資訊工程學系</option>
             <option value="course2">電機工程學系</option>
-            <option value="course3">電子工程學系</option>
-            <option value="course3">自動控制工程學系</option>
-            <option value="course3">資訊電機學院學士班</option>
-            <option value="course3">通訊工程學系</option>
-            <option value="course3">光電科學與工程學系</option>
-            <option value="course3">通識中心</option>
-            <option value="course3">應用數學學系</option>
-            <option value="course3">統計學系</option>
         </select>
-        <button type="submit">加選</button>
+        <button type="button" id="submitButton">選擇</button>
     </form>
-
+    <!-- 顯示課程表格 -->
+    <div id="dataDisplay"></div>
+    
     <!-- 退選表單 -->
     <h2>已選課程</h2>
     <ul id="selected-courses">
@@ -117,4 +113,27 @@
         </select>
         <button type="submit">退選</button>
     </form>
+
+        <script>
+        $(document).ready(function() {
+            $("#submitButton").click(function(event) {
+                event.preventDefault();  
+        
+                $.ajax({
+                    url: '/get_courses',
+                    type: 'POST',
+                    data: $('#selectForm').serialize(), 
+                    success: function(response) {
+                        var courses = response; 
+                        var html = '<table><tr><th>課程名稱</th><th>學分</th></tr>';
+                        for (var i = 0; i < courses.length; i++) {
+                            html += '<tr><td>' + courses[i].title + '</td><td>' + courses[i].credits + '</td></tr>';
+                        }
+                        html += '</table>';
+                        $('#dataDisplay').html(html);
+                    }
+                });
+            });
+        });
+        </script>
 </body>

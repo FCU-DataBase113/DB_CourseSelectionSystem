@@ -6,6 +6,9 @@ import MySQLdb
 from flask import render_template
 from flask import redirect
 from flask import url_for
+#0405
+from flask import jsonify
+
 
 wrong = [0]
 id = [0]
@@ -18,6 +21,8 @@ if __name__ == '__main__':
 def sql_log():
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
+                           #WU
+                           port = 3307,
                            user="DBAdmin",
                            passwd="123",
                            db='courseselectionsystem')
@@ -136,3 +141,24 @@ def check_user(username, password):
 @app.route('/course_selection', methods=['GET', 'POST']) 
 def course_selection():
     return render_template('CourseSelection.html')
+
+#0405
+@app.route('/get_courses', methods=['POST'])
+def get_courses():
+    # 获取表单数据
+    selected_department_name = request.form['course']
+    # 连接数据库
+    conn = sql_log()
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    # 首先，根据系所名称查询其dept_id
+    cursor.execute("SELECT dept_id FROM department WHERE dept_name = %s;", (selected_department_name,))
+    dept_result = cursor.fetchone()  # 假设dept_name是唯一的
+    if dept_result:
+        dept_id = dept_result['dept_id']
+        # 然后，使用dept_id查询相关课程 
+        cursor.execute("SELECT * FROM course WHERE dept_id = %s;", (dept_id,))
+        courses = cursor.fetchall()
+        
+        return jsonify(courses)
+    else:
+        return jsonify({"error": "Department not found"}), 404
