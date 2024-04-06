@@ -131,9 +131,9 @@
                     // 指定請求成功時要執行的函數
                     success: function(response) {
                         var courses = response; 
-                        var html = '<table><tr><th>課程名稱</th><th>學分</th></tr>';
+                        var html = '<table><tr><th>課程名稱</th><th>學分</th><th>開課年級</th><th>課程說明</th></tr>';
                         for (var i = 0; i < courses.length; i++) {
-                            html += '<tr><td>' + courses[i].title + '</td><td>' + courses[i].credits + '</td></tr>';
+                            html += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade + '</td><td>' + courses[i].description + '</td></tr>';
                         }
                         html += '</table>';
                         // 將寫好的，插入 dataDisplay 元素中

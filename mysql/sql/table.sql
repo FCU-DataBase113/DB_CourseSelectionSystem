@@ -2,7 +2,7 @@ use courseselectionsystem;
 CREATE TABLE `User` (
     `user_id` INT PRIMARY KEY,
     `user_name` VARCHAR (20),
-    `department' VARCHAR (20),
+    `department` VARCHAR (20),
     `gender` VARCHAR (10),
     `mailbox` VARCHAR (100)
 );

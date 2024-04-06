@@ -9,7 +9,9 @@
 <body>
     <div class="wrapper">
         <form method="post" action="/register">
-            用戶名：<input name="username"><br />
+            學號 :<input name="student_id"><br />
+            密碼 :<input type="password" name="password"><br />
+            年級 :<input type="text" name="grade"><br />
             <select id="department" name="department">
                 <option>請選擇你的系所</option>
                 {% for class_item in class_list %}
@@ -18,7 +20,6 @@
             </select><br />
             <input type="submit" value="註冊">
         </form>
-        
     </div>
     
     <script src="{{ url_for('static', filename='script.js') }}"></script>

@@ -33,6 +33,7 @@ def sql_log():
 def index():
     return render_template('index.html')
 
+# 重複帳號需要跳錯誤訊息，重新導向(未完成)
 # 註冊帳號
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -40,14 +41,23 @@ def register():
 
     if request.method == 'POST':
         id[0] += 1
-        username = request.form.get('username')
+        student_id = request.form.get('student_id')
+        password = request.form.get('password')  # 取得密碼
+        grade = request.form.get('grade')  # 取得年級
         department = request.form.get('department')
+        d_id = 0
+
+        for index, depart in enumerate(mylist):
+            if depart == department :
+                d_id = index + 1
+        
         # 在這裡處理註冊邏輯
-        if insert_user(id[0],username, department):
+        if insert_user(student_id, password, grade, d_id):
             return redirect(url_for('index'))
         else:
             return redirect(url_for('error'))
-    return render_template('register.html', class_list = mylist)
+    return render_template('register.html', class_list=mylist)
+
 
 # 查詢介面
 @app.route('/action', methods=['POST'])
@@ -89,11 +99,11 @@ def error():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form.get('username')
+        student_id = request.form.get('student_id')
         password = request.form.get('password')
         # 在這裡處理登入邏輯
         # 成功跳到course_selection的畫面
-        if check_user(username, password):
+        if check_user(student_id, password):
             return redirect(url_for('course_selection'))
         else:
             wrong[0] = 1
@@ -101,15 +111,12 @@ def login():
     return render_template('login.html')
 
 # 新增使用者
-def insert_user(id,username, department):
+def insert_user(student_id, password, grade, department):
     # 建立連接
     conn = sql_log()
-    userid = id
-    name = username
-    depart = department
     # 欲新增的 query 指令
-    query = "INSERT INTO user (user_id,user_name, department) VALUES ('{}', '{}', '{}');".format(
-    userid, name, depart)
+    query = "INSERT INTO Student (student_id, student_password, department_id, grade) VALUES ('{}', '{}', '{}', '{}');".format(
+    student_id, password, department, grade)
     # 執行新增，並且尋找如果有相同的名字就不新增，並且跳到錯誤頁面
     # 要先執行查詢，再執行新增，不然會有問題
     cursor = conn.cursor()
@@ -118,14 +125,12 @@ def insert_user(id,username, department):
     return True
     
 # 查詢使用者
-def check_user(username, password):
+def check_user(student_id, password):
     # 建立連接
     conn = sql_log()
-    name = username
-    passwd = password
     # 欲查詢的 query 指令
-    query = "SELECT name FROM user_acc WHERE name = '{}' AND passwd = '{}';".format(
-        name, passwd)
+    query = "SELECT student_id FROM Student WHERE student_id = '{}' AND student_password = '{}';".format(
+        student_id, password)
     # 執行查詢
     cursor = conn.cursor()
     cursor.execute(query)
@@ -147,18 +152,20 @@ def course_selection():
 def get_courses():
     # 從course的表單獲取選擇的系所 id
     selected_department_name = request.form['course']
+    department_id = int(selected_department_name) + 1
+
     # 測試是否獲取到系所 id
-    print("Selected department name:", selected_department_name)  
+    print("Selected department name:", department_id)  
     conn = sql_log()
     # 建立 cursor 物件 - 字典
     cursor = conn.cursor(MySQLdb.cursors.DictCursor)
     # 運用 SQL 語法查詢該系所的 id
-    cursor.execute("SELECT dept_id FROM course WHERE dept_id = %s;", (selected_department_name,))
+    cursor.execute("SELECT department_id FROM Course WHERE department_id = %s;", (department_id,))
     dept_result = cursor.fetchone()  
     # 有無找到相關資訊
     if dept_result:
-        dept_id = dept_result['dept_id'] 
-        cursor.execute("SELECT * FROM course WHERE dept_id = %s;", (dept_id,))
+        dept_id = dept_result['department_id'] 
+        cursor.execute("SELECT * FROM Course WHERE department_id = %s;", (dept_id,))
         courses = cursor.fetchall()
         return jsonify(courses)
     else:

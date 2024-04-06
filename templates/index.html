@@ -4,23 +4,43 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DB test</title>
+    <title>選課系統</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <style>
+        /* 新增的 CSS 樣式 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
 </head>
 <body>
-    <nav class="float-nav-outer" id = "main">
+    <nav class="float-nav-outer" id="main">
         <ul class="float-nav">
             <li><a href="{{ url_for('register') }}">註冊</a></li>   
             <li><a href="{{ url_for('login') }}">登入</a></li>      
         </ul>
     </nav>
-    <div class="wrapper">
-        <form method="post" action="/action">
-            文字輸出欄位：<input name="my_head">
-            <input type="submit" value="送出">
+
+    <div class="container">
+        <h1 style="color: white;">歡迎來到選課系統</h1>
+        <p style="color: white;">在這裡您可以進行課程選擇，請登入或註冊以繼續。</p>
+        <form>
+            <input type="text" class="search-box" placeholder="輸入關鍵字檢索課程(unavaliable)">
+            <button type="submit">搜尋</button>
         </form>
     </div>
-    
 </body>
 </html>
