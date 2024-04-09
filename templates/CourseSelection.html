@@ -108,6 +108,9 @@
             </tr>
         </table>
     </ul>
+    <!-- 更新課表按鈕 -->
+    <button type="button" id="updateScheduleButton">更新課表</button>
+
     <form action="#" method="POST">
         <label for="selected-course">選擇要退選的課程：</label>
         <select id="selected-course" name="selected-course">
@@ -149,13 +152,62 @@
                 $.ajax({
                     url: '/add_course',
                     type: 'POST',
-                    data: { course_id: courseId.toString()}, // 將選擇的課程ID作為數據傳遞給後端
+                    data: { course_id: courseId.toString() }, // 將選擇的課程ID作為數據傳遞給後端
                     success: function (response) {
                         // 顯示添加成功的提示
                         alert('課程添加成功! 選擇的課程ID為:' + courseId);
                     }
                 });
             });
+
+            // 當使用者按下更新課表按鈕時
+            $("#updateScheduleButton").click(function () {
+                // 發送異步的HTTP請求 發送了一個GET請求到URL為'/update_schedule'的後端接口
+                $.ajax({
+                    url: '/update_schedule',
+                    type: 'GET',
+                    // 指定請求成功時要執行的函數
+                    success: function (response) {
+                        // 更新課表
+                        alert('課表更新成功!')
+                        console.log(response);
+                        updateSchedule(response);
+                    }
+                });
+            });
+            // todo : 美化這個表格跟原本一樣
+            function updateSchedule(scheduleData) {
+                // console.log(scheduleData);
+                var scheduleTable = $("#selected-courses");
+                // 清空課表內容
+                scheduleTable.empty();
+                // 一二三四五六日
+                var headerRow = "<tr><th></th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th></tr>";
+                scheduleTable.append(headerRow);
+
+                // 一周8節課,5天
+                var periodsPerDay = 8;
+                var daysPerWeek = 5;
+
+                // 根據scheduleData動態生成課表內容行
+                for (var i = 0; i < periodsPerDay; i++) {
+                    var courseRow = "<tr><th>" + (i + 1) + "</th>";
+                    for (var j = 0; j < daysPerWeek; j++) {
+                        var courseName = null;
+                        for (var k = 0; k < scheduleData.length; k++) {
+                            console.log(scheduleData[k].week_day + " " + scheduleData[k].time_index + " " + scheduleData[k].course_name);
+                            if (scheduleData[k][1] == (j + 1) && scheduleData[k][2] == (i + 1)) {
+                                courseName = scheduleData[k][3];
+                                break;
+                            }
+                        }
+                        courseRow += "<td>" + (courseName ? courseName : "  ") + "</td>";
+                    }
+                    courseRow += "</tr>";
+                    scheduleTable.append(courseRow);
+                }
+            }
+
         });
 
     </script>

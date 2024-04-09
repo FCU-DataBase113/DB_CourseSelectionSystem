@@ -174,13 +174,16 @@ def get_courses():
         error_msg = {"error": "Course not found"}
         return jsonify(error_msg), 404
     
-# 加入課程
+# 加入課程 
+# todo: 避免選擇重複課程或不符合條件的課程
+
 @app.route('/add_course', methods=['POST'])
 def add_course():
     # 聲明全局變量
     global logged_in_user_id
     # 獲取前端傳遞的課程ID
     course_id = request.form.get('course_id')
+    # 測試是否獲取到課程ID
     print("course_id:", course_id)
     # 將課程ID插入到SelectedCouse表中
     conn = sql_log()
@@ -197,3 +200,26 @@ def add_course():
         conn.rollback()
         success_response = {"success": False, "error": str(e)}
     return jsonify(success_response)
+
+# 抓取已選課程
+def get_schedule_data():
+    global logged_in_user_id
+    conn = sql_log()
+    # 查詢課表的語法
+    query = ("SELECT sc.course_id, ct.week_day, ct.time_index ,c.course_name FROM selectedcourse sc "
+             "INNER JOIN CourseTime ct ON sc.course_id = ct.course_id "
+             "INNER JOIN course c ON c.course_id = sc.course_id "
+             "WHERE sc.student_id = %s")  
+    cursor = conn.cursor()
+    cursor.execute(query, (logged_in_user_id,))
+    schedule_data = cursor.fetchall()
+    # 可以確定schedule_data是否為空
+    print(schedule_data)
+
+    return schedule_data
+
+# 更新課表按鈕按下
+@app.route('/update_schedule', methods=['GET'])
+def update_schedule():
+    schedule_data = get_schedule_data()  # 此函數可以從數據庫中獲取課表數據
+    return jsonify(schedule_data)
