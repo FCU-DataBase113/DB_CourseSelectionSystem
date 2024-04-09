@@ -1,14 +1,12 @@
 #!/usr/bin/env python3
 # coding=utf-8
 # -*- coding: UTF-8 -*-
-from flask import Flask, request
-import MySQLdb
-from flask import render_template
-from flask import redirect
-from flask import url_for
-#0405
-from flask import jsonify
 
+import MySQLdb
+from flask import url_for,jsonify,redirect,render_template,Flask, request
+
+# 存放登入成功id
+logged_in_user_id = None
 
 wrong = [0]
 id = [0]
@@ -98,12 +96,16 @@ def error():
 # 登入帳號
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global logged_in_user_id
     if request.method == 'POST':
         student_id = request.form.get('student_id')
         password = request.form.get('password')
         # 在這裡處理登入邏輯
         # 成功跳到course_selection的畫面
         if check_user(student_id, password):
+            # 將學生 ID 存入全局變數
+            logged_in_user_id = student_id
+            print("logged_in_user_id:", logged_in_user_id)
             return redirect(url_for('course_selection'))
         else:
             wrong[0] = 1
@@ -171,4 +173,27 @@ def get_courses():
     else:
         error_msg = {"error": "Course not found"}
         return jsonify(error_msg), 404
-
+    
+# 加入課程
+@app.route('/add_course', methods=['POST'])
+def add_course():
+    # 聲明全局變量
+    global logged_in_user_id
+    # 獲取前端傳遞的課程ID
+    course_id = request.form.get('course_id')
+    print("course_id:", course_id)
+    # 將課程ID插入到SelectedCouse表中
+    conn = sql_log()
+    # 插入課程ID和學生ID
+    try:
+        query = "INSERT INTO SelectedCourse (course_id, student_id) VALUES (%s, %s)"
+        cursor = conn.cursor()
+        cursor.execute(query, (course_id, logged_in_user_id))
+        conn.commit()
+        print("success")
+        success_response = {"success": True}
+    except Exception as e:
+    # todo: 符合條件
+        conn.rollback()
+        success_response = {"success": False, "error": str(e)}
+    return jsonify(success_response)

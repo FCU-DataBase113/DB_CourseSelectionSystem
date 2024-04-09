@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    
+
     <h1>選課系統</h1>
     <!-- 加選表單 -->
     <h2>加選課程</h2>
@@ -26,7 +26,7 @@
     </form>
     <!-- 顯示課程表格 -->
     <div id="dataDisplay"></div>
-    
+
     <!-- 退選表單 -->
     <h2>已選課程</h2>
     <ul id="selected-courses">
@@ -118,29 +118,45 @@
 
     <script>
         // 確保網頁已經載入完畢
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 當使用者按下選擇按鈕時
-            $("#submitButton").click(function(event) {
+            $("#submitButton").click(function (event) {
                 // 防止表單預設的提交行為
-                event.preventDefault();  
+                event.preventDefault();
                 // 發送異步的HTTP請求 發送了一個POST請求到URL為'/get_courses'的後端接口，並將表單數據序列化後作為請求數據
                 $.ajax({
                     url: '/get_courses',
                     type: 'POST',
-                    data: $('#selectForm').serialize(), 
+                    data: $('#selectForm').serialize(),
                     // 指定請求成功時要執行的函數
-                    success: function(response) {
-                        var courses = response; 
-                        var html = '<table><tr><th>課程名稱</th><th>學分</th><th>開課年級</th><th>課程說明</th></tr>';
+                    success: function (response) {
+                        var courses = response;
+                        var html = '';
                         for (var i = 0; i < courses.length; i++) {
-                            html += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade + '</td><td>' + courses[i].description + '</td></tr>';
+                            // 將 button 賦予 data-id 為該課程相對應的 course_id
+                            html += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
+                                '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
                         }
-                        html += '</table>';
-                        // 將寫好的，插入 dataDisplay 元素中
-                        $('#dataDisplay').html(html);
+                        // 將動態生成的課程表插入到頁面中
+                        $('#dataDisplay').html('<table>' + html + '</table>');
+                    }
+                });
+            });
+            // 將所輸入的回傳給後端
+            $(document).on('click', '.select-course', function () {
+                // 指定 data-id 為要回傳的值
+                var courseId = $(this).attr('data-id');
+                $.ajax({
+                    url: '/add_course',
+                    type: 'POST',
+                    data: { course_id: courseId.toString()}, // 將選擇的課程ID作為數據傳遞給後端
+                    success: function (response) {
+                        // 顯示添加成功的提示
+                        alert('課程添加成功! 選擇的課程ID為:' + courseId);
                     }
                 });
             });
         });
+
     </script>
 </body>

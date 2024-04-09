@@ -90,14 +90,14 @@ INSERT INTO `CourseTime` VALUES ('005', 'Monday', '6');
 
 
 /* Record the courses students have 'selected' */
-CREATE TABLE `SelectedCouse` (
+CREATE TABLE `SelectedCourse` (
     `course_id`         VARCHAR (10),
     `student_id`        VARCHAR (10),
-    PRIMARY KEY (`course_id`, `student_id`)
+    PRIMARY KEY (`student_id`)
 );
 
-INSERT INTO `SelectedCouse` VALUES ('001', 'D1234567');
-INSERT INTO `SelectedCouse` VALUES ('002', 'E2345678');
-INSERT INTO `SelectedCouse` VALUES ('003', 'F3456789');
-INSERT INTO `SelectedCouse` VALUES ('004', 'G4567890');
-INSERT INTO `SelectedCouse` VALUES ('005', 'H5678901');
+INSERT INTO `SelectedCourse` VALUES ('001', 'D1234567');
+INSERT INTO `SelectedCourse` VALUES ('002', 'E2345678');
+INSERT INTO `SelectedCourse` VALUES ('003', 'F3456789');
+INSERT INTO `SelectedCourse` VALUES ('004', 'G4567890');
+INSERT INTO `SelectedCourse` VALUES ('005', 'H5678901');
