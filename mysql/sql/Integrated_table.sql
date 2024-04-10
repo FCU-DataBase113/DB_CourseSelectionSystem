@@ -1,9 +1,17 @@
+<<<<<<< Updated upstream
 /* CREATE DATABASE `CourseSelectionSystem` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+=======
+CREATE DATABASE `CourseSelectionSystem` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+>>>>>>> Stashed changes
 CREATE USER DBAdmin@'%' identified by '123';
 grant all PRIVILEGES on *.* to DBAdmin@'%' WITH GRANT OPTION;
 flush privileges;
 
+<<<<<<< Updated upstream
 use CourseSelectionSystem; */
+=======
+use CourseSelectionSystem; 
+>>>>>>> Stashed changes
 
 CREATE TABLE `Department` (
     `department_id`     INT PRIMARY KEY,
@@ -61,6 +69,7 @@ INSERT INTO `Course` VALUES ('008', '離散數學離散', 2, '必修', 3, '一�
 INSERT INTO `Course` VALUES ('009', '數學離散數學', 2, '必修', 3, '一呱基礎性的課程', 'null', 2, 5, 0);
 INSERT INTO `Course` VALUES ('010', '呱呱鴨呱呱', 2, '必修', 3, '一呱基礎性的課程', 'null', 3, 5, 0);
 
+<<<<<<< Updated upstream
 /* Record the courses start and end time */
 CREATE TABLE `CourseTime` (
     `course_id`         VARCHAR (10),
@@ -76,6 +85,8 @@ INSERT INTO `CourseTime` VALUES ('003', '4', '4');
 INSERT INTO `CourseTime` VALUES ('004', '5', '5');
 INSERT INTO `CourseTime` VALUES ('005', '1', '6');
 
+=======
+>>>>>>> Stashed changes
 
 /* Record the courses required relations */
 CREATE TABLE `PrerequisiteCourses` (
@@ -88,6 +99,7 @@ INSERT INTO `PrerequisiteCourses` VALUES ('002', '003');
 INSERT INTO `PrerequisiteCourses` VALUES ('002', '004');
 INSERT INTO `PrerequisiteCourses` VALUES ('005', '002');
 
+<<<<<<< Updated upstream
 
 /* Record the courses students have 'selected' */
 CREATE TABLE `SelectedCourse` (
@@ -104,3 +116,33 @@ INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('004', 'G456789
 INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('005', 'H5678901');
 
 
+=======
+/* Record the courses start and end time */
+CREATE TABLE `CourseTime` (
+    `course_id`         VARCHAR (10),
+    `week_day`          VARCHAR (20),
+    `time_index`        INT, /* 1 ~ 12 */
+    PRIMARY KEY (`course_id`, `week_day`, `time_index`)
+);
+
+INSERT INTO `CourseTime` VALUES ('001', 'Monday', '1');
+INSERT INTO `CourseTime` VALUES ('001', 'Wednesday', '2');
+INSERT INTO `CourseTime` VALUES ('002', 'Tuesday', '3');
+INSERT INTO `CourseTime` VALUES ('003', 'Thursday', '4');
+INSERT INTO `CourseTime` VALUES ('004', 'Friday', '5');
+INSERT INTO `CourseTime` VALUES ('005', 'Monday', '6');
+
+
+/* Record the courses students have 'selected' */
+CREATE TABLE `SelectedCouse` (
+    `course_id`         VARCHAR (10),
+    `student_id`        VARCHAR (10),
+    PRIMARY KEY (`course_id`, `student_id`)
+);
+
+INSERT INTO `SelectedCouse` VALUES ('001', 'D1234567');
+INSERT INTO `SelectedCouse` VALUES ('002', 'E2345678');
+INSERT INTO `SelectedCouse` VALUES ('003', 'F3456789');
+INSERT INTO `SelectedCouse` VALUES ('004', 'G4567890');
+INSERT INTO `SelectedCouse` VALUES ('005', 'H5678901');
+>>>>>>> Stashed changes
