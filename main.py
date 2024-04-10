@@ -109,6 +109,7 @@ def login():
             wrong[0] = 1
             return redirect(url_for('error'))
     return render_template('login.html')
+
 def insert_user(username, password):
     # 建立連接
     conn = sql_log('userdb')
