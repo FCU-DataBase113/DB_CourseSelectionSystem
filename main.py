@@ -20,7 +20,7 @@ def sql_log():
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
                            #WU
-                        #    port = 3307,
+                           port = 3307,
                            user="DBAdmin",
                            passwd="123",
                            db='courseselectionsystem')
