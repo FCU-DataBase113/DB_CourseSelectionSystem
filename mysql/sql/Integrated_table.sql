@@ -54,12 +54,14 @@ INSERT INTO `Course` VALUES ('002', '資料結構', 1, '必修', 3, '一門很�
 INSERT INTO `Course` VALUES ('003', '演算法', 1, '必修', 3, '一門涵蓋廣泛的呱呱', '001', 2, 5, 0);
 INSERT INTO `Course` VALUES ('004', '計算機組織與結構', 1, '必修', 3, '一門呱呱與實踐相結合的課程', '001', 2, 5, 0);
 INSERT INTO `Course` VALUES ('005', '離散數學', 1, '必修', 3, '一呱基礎性的課程', 'null', 1, 5, 0);
+INSERT INTO `Course` VALUES ('006', '系統程式', 1, '必修', 3, '一呱基礎性的課程', 'null', 1, 5, 0);
 
-INSERT INTO `Course` VALUES ('006', '離散數學', 2, '必修', 3, '一呱基礎性的課程', 'null', 1, 5, 0);
-INSERT INTO `Course` VALUES ('007', '數學離散', 2, '必修', 3, '一呱基礎性的課程', 'null', 1, 5, 0);
-INSERT INTO `Course` VALUES ('008', '離散數學離散', 2, '必修', 3, '一呱基礎性的課程', 'null', 2, 5, 0);
-INSERT INTO `Course` VALUES ('009', '數學離散數學', 2, '必修', 3, '一呱基礎性的課程', 'null', 2, 5, 0);
-INSERT INTO `Course` VALUES ('010', '呱呱鴨呱呱', 2, '必修', 3, '一呱基礎性的課程', 'null', 3, 5, 0);
+
+INSERT INTO `Course` VALUES ('007', '離散數學', 2, '必修', 3, '一呱基礎性的課程', 'null', 1, 5, 0);
+INSERT INTO `Course` VALUES ('008', '數學離散', 2, '必修', 3, '一呱基礎性的課程', 'null', 1, 5, 0);
+INSERT INTO `Course` VALUES ('009', '離散數學離散', 2, '必修', 3, '一呱基礎性的課程', 'null', 2, 5, 0);
+INSERT INTO `Course` VALUES ('010', '數學離散數學', 2, '必修', 3, '一呱基礎性的課程', 'null', 2, 5, 0);
+INSERT INTO `Course` VALUES ('011', '呱呱鴨呱呱', 2, '必修', 3, '一呱基礎性的課程', 'null', 3, 5, 0);
 
 /* Record the courses start and end time */
 CREATE TABLE `CourseTime` (
@@ -74,13 +76,14 @@ INSERT INTO `CourseTime` VALUES ('002', '2', '3');
 INSERT INTO `CourseTime` VALUES ('003', '4', '4');
 INSERT INTO `CourseTime` VALUES ('004', '5', '5');
 INSERT INTO `CourseTime` VALUES ('005', '1', '6');
-
 INSERT INTO `CourseTime` VALUES ('006', '1', '6');
+
 INSERT INTO `CourseTime` VALUES ('007', '2', '6');
 INSERT INTO `CourseTime` VALUES ('008', '3', '6');
 INSERT INTO `CourseTime` VALUES ('009', '4', '6');
 INSERT INTO `CourseTime` VALUES ('009', '4', '5');
 INSERT INTO `CourseTime` VALUES ('010', '5', '6');
+INSERT INTO `CourseTime` VALUES ('010', '7', '8');
 
 
 

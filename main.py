@@ -200,6 +200,14 @@ def add_course():
         # 如果學生不是該系所的學生
         print("Not a student of the department")
         return jsonify({"success": False, "error": "Not a student of the department"});
+    elif is_course_of_capacity(course_id):
+        # 如果課程人數已滿
+        print("Course is full")
+        return jsonify({"success": False, "error": "Course is full"});
+    elif not is_course_time_conflict(course_id, logged_in_user_id):
+        # 如果課程時間有衝突
+        print("Course time conflict")
+        return jsonify({"success": False, "error": "Course time conflict"});
     else:
         # 插入課程ID和學生ID
         try:
@@ -236,6 +244,33 @@ def is_student_of_department(course_id, student_id):
     # 如果查詢結果為 None，則表示該學生不是該系所的學生
     return result is not None
 
+# 確保該課程的人數未滿
+def is_course_of_capacity(course_id):
+    query = "SELECT * FROM Course WHERE course_id = %s AND maxNumOfSelect <= CurNumOfSelect"
+    conn = sql_log()
+    cursor = conn.cursor()
+    cursor.execute(query, (course_id,))
+    result = cursor.fetchone()
+    # 如果查詢結果為 None，則表示該課程的人數已滿
+    return result is not None
+
+# 確保沒有衝堂的課程
+def is_course_time_conflict(course_id, student_id):
+    # 該名同學已選擇的課程
+    # SELECT ct1.week_day, ct1.time_index FROM CourseTime ct1 WHERE ct1.course_id = "001"
+    # AND EXISTS (SELECT 1 FROM CourseTime ct2 INNER JOIN SelectedCourse sc ON ct2.course_id = sc.course_id
+    #     WHERE sc.student_id = "D1234567" AND ct2.week_day = ct1.week_day AND ct2.time_index = ct1.time_index)
+    query = """SELECT ct1.week_day, ct1.time_index FROM CourseTime ct1 WHERE ct1.course_id = %s 
+    AND EXISTS (SELECT 1 FROM CourseTime ct2 INNER JOIN SelectedCourse sc ON ct2.course_id = sc.course_id WHERE sc.student_id = %s 
+    AND ct2.week_day = ct1.week_day AND ct2.time_index = ct1.time_index)"""
+    
+    conn = sql_log()
+    cursor = conn.cursor()
+    cursor.execute(query, (course_id, student_id))
+    result = cursor.fetchone()
+    # 如果查詢結果為 not None，則表示該課程的時間與已選擇的課程時間有衝突
+    return result is None
+
 # 抓取已選課程
 def get_schedule_data():
     global logged_in_user_id
@@ -252,6 +287,28 @@ def get_schedule_data():
     print(schedule_data)
 
     return schedule_data
+
+# 人數的更新
+def update_cur_num_of_select(course_id, new_value):
+    try:
+        # 連接資料庫
+        conn = sql_log()
+        cursor = conn.cursor()
+        
+        # 更新語句
+        query = "UPDATE Course SET curNumOfSelect = %s WHERE course_id = %s"
+        
+        # 執行更新操作
+        cursor.execute(query, (new_value, course_id))
+        
+        # 提交變更
+        conn.commit()
+        
+        print(f"Course ID {course_id} has been updated with curNumOfSelect = {new_value}")
+        
+    except Exception as e:
+        conn.rollback()
+        print(f"Error updating course: {e}")
 
 # 更新課表按鈕按下
 @app.route('/update_schedule', methods=['GET'])
