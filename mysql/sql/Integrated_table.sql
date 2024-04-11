@@ -70,11 +70,18 @@ CREATE TABLE `CourseTime` (
 );
 
 INSERT INTO `CourseTime` VALUES ('001', '1', '1');
-INSERT INTO `CourseTime` VALUES ('001', '3', '2');
 INSERT INTO `CourseTime` VALUES ('002', '2', '3');
 INSERT INTO `CourseTime` VALUES ('003', '4', '4');
 INSERT INTO `CourseTime` VALUES ('004', '5', '5');
 INSERT INTO `CourseTime` VALUES ('005', '1', '6');
+
+INSERT INTO `CourseTime` VALUES ('006', '1', '6');
+INSERT INTO `CourseTime` VALUES ('007', '2', '6');
+INSERT INTO `CourseTime` VALUES ('008', '3', '6');
+INSERT INTO `CourseTime` VALUES ('009', '4', '6');
+INSERT INTO `CourseTime` VALUES ('009', '4', '5');
+INSERT INTO `CourseTime` VALUES ('010', '5', '6');
+
 
 
 /* Record the courses required relations */
