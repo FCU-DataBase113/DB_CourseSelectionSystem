@@ -19,9 +19,11 @@ if __name__ == '__main__':
 def sql_log():
     # 建立資料庫連線
     conn = MySQLdb.connect(host="127.0.0.1",
-                           user="hj",
-                           passwd="test1234",
-                           db=db_name)
+                           user="DBAdmin",
+                           #WU
+                        #    port = 3307,
+                           passwd="123",
+                           db="CourseSelectionSystem",)
     return conn
 
 # 初始畫面
