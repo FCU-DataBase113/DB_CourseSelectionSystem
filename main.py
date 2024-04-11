@@ -1,7 +1,3 @@
-#!/usr/bin/env python3
-# coding=utf-8
-# -*- coding: UTF-8 -*-
-
 import MySQLdb
 from flask import url_for,jsonify,redirect,render_template,Flask, request
 
