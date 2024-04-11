@@ -145,6 +145,7 @@
                     }
                 });
             });
+
             // 將所輸入的回傳給後端
             $(document).on('click', '.select-course', function () {
                 // 指定 data-id 為要回傳的值
@@ -154,8 +155,17 @@
                     type: 'POST',
                     data: { course_id: courseId.toString() }, // 將選擇的課程ID作為數據傳遞給後端
                     success: function (response) {
-                        // 顯示添加成功的提示
-                        alert('課程添加成功! 選擇的課程ID為:' + courseId);
+                        if (response.success) {
+                            // 顯示添加成功的提示
+                            alert('課程添加成功! 選擇的課程ID為:' + courseId);
+                        } else {
+                            // 顯示添加失敗的提示
+                            alert('課程添加失敗! 錯誤訊息: ' + response.error);
+                        }
+                    },
+                    error: function (response) {
+                        // 顯示添加失敗的提示
+                        alert('課程添加失敗! 選擇的課程ID為:' + courseId + '與伺服器出現錯誤');
                     }
                 });
             });
@@ -176,7 +186,8 @@
                     }
                 });
             });
-            // todo : 美化這個表格跟原本一樣
+
+            // 更新課表的table
             function updateSchedule(scheduleData) {
                 // console.log(scheduleData);
                 var scheduleTable = $("#selected-courses");

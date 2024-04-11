@@ -1,5 +1,6 @@
 import MySQLdb
 from flask import url_for,jsonify,redirect,render_template,Flask, request
+from sqlite3 import IntegrityError
 
 # 存放登入成功id
 logged_in_user_id = None
@@ -17,7 +18,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                        #    port = 3307,
+                           port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -179,8 +180,7 @@ def get_courses():
         return jsonify(error_msg), 404
     
 # 加入課程 
-# todo: 避免選擇重複課程或不符合條件的課程
-
+# todo: 避免不符合條件的課程
 @app.route('/add_course', methods=['POST'])
 def add_course():
     # 聲明全局變量
@@ -191,19 +191,50 @@ def add_course():
     print("course_id:", course_id)
     # 將課程ID插入到SelectedCouse表中
     conn = sql_log()
-    # 插入課程ID和學生ID
-    try:
-        query = "INSERT INTO SelectedCourse (course_id, student_id) VALUES (%s, %s)"
-        cursor = conn.cursor()
-        cursor.execute(query, (course_id, logged_in_user_id))
-        conn.commit()
-        print("success")
-        success_response = {"success": True}
-    except Exception as e:
-    # todo: 符合條件
-        conn.rollback()
-        success_response = {"success": False, "error": str(e)}
-    return jsonify(success_response)
+    # 確保沒有重複的課程
+    if course_already_added(course_id, logged_in_user_id):
+        # 如果課程已經被選擇過在自己的課表內
+        print("Course already added")
+        return jsonify({"success": False, "error": "Course already added"});
+    elif not is_student_of_department(course_id, logged_in_user_id):
+        # 如果學生不是該系所的學生
+        print("Not a student of the department")
+        return jsonify({"success": False, "error": "Not a student of the department"});
+    else:
+        # 插入課程ID和學生ID
+        try:
+            query = "INSERT INTO SelectedCourse (course_id, student_id) VALUES (%s, %s)"
+            cursor = conn.cursor()
+            cursor.execute(query, (course_id, logged_in_user_id))
+            conn.commit()
+            print("success")
+            success_response = {"success": True}
+        except IntegrityError as e:
+            conn.rollback()
+            success_response = {"success": False, "error": "Course already added"}
+        except Exception as e:
+            conn.rollback()
+            success_response = {"success": False, "error": str(e)}
+        return jsonify(success_response)
+
+# 確保沒有選到重複課程的function
+def course_already_added(course_id, student_id):
+    query = "SELECT * FROM SelectedCourse WHERE course_id = %s AND student_id = %s"
+    conn = sql_log()
+    cursor = conn.cursor()
+    cursor.execute(query, (course_id, student_id))
+    result = cursor.fetchone()
+    return result is not None
+
+# 確保同學為該系所的學生
+def is_student_of_department(course_id, student_id):
+    query = "SELECT * FROM Student AS s WHERE s.department_id = (SELECT c.department_id FROM Course AS c WHERE c.course_id = %s) AND s.student_id = %s"
+    conn = sql_log()
+    cursor = conn.cursor()
+    cursor.execute(query, (course_id, student_id))
+    result = cursor.fetchone()
+    # 如果查詢結果為 None，則表示該學生不是該系所的學生
+    return result is not None
 
 # 抓取已選課程
 def get_schedule_data():
@@ -217,7 +248,7 @@ def get_schedule_data():
     cursor = conn.cursor()
     cursor.execute(query, (logged_in_user_id,))
     schedule_data = cursor.fetchall()
-    # 可以確定schedule_data是否為空
+    # 可以確定 schedule_data 是否為空
     print(schedule_data)
 
     return schedule_data
