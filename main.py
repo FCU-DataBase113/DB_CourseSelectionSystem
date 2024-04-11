@@ -1,6 +1,5 @@
 import MySQLdb
 from flask import url_for,jsonify,redirect,render_template,Flask, request
-from sqlite3 import IntegrityError
 
 # 存放登入成功id
 logged_in_user_id = None
@@ -208,18 +207,30 @@ def add_course():
         # 如果課程時間有衝突
         print("Course time conflict")
         return jsonify({"success": False, "error": "Course time conflict"});
+    elif is_course_same(course_id, logged_in_user_id):
+        # 如果課程有相同名稱的被選擇
+        print("Course is have the same")
+        return jsonify({"success": False, "error": "Course is have the same"});
     else:
         # 插入課程ID和學生ID
         try:
-            query = "INSERT INTO SelectedCourse (course_id, student_id) VALUES (%s, %s)"
+            insert_query = "INSERT INTO SelectedCourse (course_id, student_id) VALUES (%s, %s)"
             cursor = conn.cursor()
-            cursor.execute(query, (course_id, logged_in_user_id))
+            cursor.execute(insert_query, (course_id, logged_in_user_id))
             conn.commit()
-            print("success")
-            success_response = {"success": True}
-        except IntegrityError as e:
-            conn.rollback()
-            success_response = {"success": False, "error": "Course already added"}
+            # 更新課表中的CurNumOfSelect
+            update_query = "UPDATE Course SET curNumOfSelect = curNumOfSelect + 1 WHERE course_id = %s"
+            cursor.execute(update_query, (course_id,))
+            conn.commit()
+            # 確定人數
+            select_query = "SELECT maxNumOfSelect, curNumOfSelect FROM Course WHERE course_id = %s"
+            cursor.execute(select_query, (course_id,))
+            cur_num = cursor.fetchone()  # 只需要一次fetchone()
+            maxNumOfSelect = cur_num[0]
+            curNumOfSelect = cur_num[1]
+            # 需要將數字轉為字符才能連接字串
+            print("success Now have" + ":" + str(curNumOfSelect) + "/" + str(maxNumOfSelect))
+            success_response = {"success": True, "message": "Now have: " + str(curNumOfSelect) + "/" + str(maxNumOfSelect)}
         except Exception as e:
             conn.rollback()
             success_response = {"success": False, "error": str(e)}
@@ -263,13 +274,26 @@ def is_course_time_conflict(course_id, student_id):
     query = """SELECT ct1.week_day, ct1.time_index FROM CourseTime ct1 WHERE ct1.course_id = %s 
     AND EXISTS (SELECT 1 FROM CourseTime ct2 INNER JOIN SelectedCourse sc ON ct2.course_id = sc.course_id WHERE sc.student_id = %s 
     AND ct2.week_day = ct1.week_day AND ct2.time_index = ct1.time_index)"""
-    
+
     conn = sql_log()
     cursor = conn.cursor()
     cursor.execute(query, (course_id, student_id))
     result = cursor.fetchone()
     # 如果查詢結果為 not None，則表示該課程的時間與已選擇的課程時間有衝突
     return result is None
+
+# 確保沒有相同名稱的課程
+def is_course_same(course_id, student_id):
+    query = """SELECT c.course_name
+    FROM SelectedCourse sc
+    JOIN Course c ON sc.course_id = c.course_id
+    WHERE sc.student_id = %s AND c.course_name in (SELECT course_name FROM Course WHERE course_id = %s)"""
+    conn = sql_log()
+    cursor = conn.cursor()
+    cursor.execute(query, (student_id, course_id))
+    result = cursor.fetchone()
+    # 如果查詢結果為 None，則表示該課程已經被選擇
+    return result is not None
 
 # 抓取已選課程
 def get_schedule_data():

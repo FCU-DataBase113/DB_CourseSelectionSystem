@@ -157,7 +157,7 @@
                     success: function (response) {
                         if (response.success) {
                             // 顯示添加成功的提示
-                            alert('課程添加成功! 選擇的課程ID為:' + courseId);
+                            alert('課程添加成功! 選擇的課程ID為:' + courseId + ' , '+response.message);
                         } else {
                             // 顯示添加失敗的提示
                             alert('課程添加失敗! 錯誤訊息: ' + response.error);
