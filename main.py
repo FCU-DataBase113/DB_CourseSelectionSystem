@@ -17,7 +17,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                           port = 3307,
+                        #    port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -108,18 +108,16 @@ def login():
             return redirect(url_for('error'))
     return render_template('login.html')
 
-def insert_user(username, password):
+def insert_user(student_id, password, grade, d_id):
     # 建立連接
-    conn = sql_log('userdb')
-    name = username
-    passwd = password
+    conn = sql_log()
     # 欲新增的 query 指令
-    query = "INSERT INTO user_acc (name, passwd) VALUES ('{}', '{}');".format(
-        name, passwd)
+    query = "INSERT INTO student (student_id, student_password, grade, department_id) VALUES ('{}', '{}', '{}', '{}');".format(
+        student_id, password, grade, d_id)
     # 執行新增，並且尋找如果有相同的名字就不新增，並且跳到錯誤頁面
     # 要先執行查詢，再執行新增，不然會有問題
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM user_acc WHERE name = '{}';".format(name))
+    cursor.execute("SELECT student_id FROM student WHERE student_id = '{}';".format(student_id))
     result = cursor.fetchone()
     if result is None:
         # 如果查詢結果為 None，則表示資料庫中沒有該名稱，可以新增
