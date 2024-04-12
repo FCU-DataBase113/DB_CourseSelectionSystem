@@ -17,6 +17,7 @@
                     <th>課程名稱</th>
                     <th>學分</th>
                     <th>年級</th>
+                    <th>必/選修</th>
                     <th>課程介紹</th>
                 </tr>
             </thead>
@@ -43,7 +44,7 @@
                 window.location.href = '/course_selection';
             }
         });
-
+    
         // 當使用者按下觸發按鈕時
         $("#submitButton").click(function (event) {
             event.preventDefault();
@@ -56,7 +57,7 @@
                     var html = '';
                     for (var i = 0; i < courses.length; i++) {
                         html += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
-                            '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
+                            '</td><td>'+ courses[i].required + '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
                     }
                     $('#dataDisplay').html(html);
                 },
@@ -76,19 +77,39 @@
             $.ajax({
                 url: '/withdraw_courses',
                 type: 'POST',
-                data: { course_id: courseId.toString() }, // 將選擇的課程ID作為數據傳遞給後端
+                data: { course_id: courseId.toString() },
                 success: function (response) {
-                    // 顯示添加成功的提示
-                    alert('操作成功!');
-                    // 自動更新課程列表
-                    $("#submitButton").click();
+                    if (response.confirm_required) {
+                        // 如果需要確認退選，彈出提示框
+                        if (confirm(response.message)) {
+                            // 如果用戶確認退選，則執行退選操作
+                            $.ajax({
+                                url: '/withdraw_courses_without_check',
+                                type: 'POST',
+                                data: { course_id: courseId.toString() },
+                                success: function () {
+                                    alert('操作成功!');
+                                    // 自動更新課程列表
+                                    $("#submitButton").click();
+                                },
+                                error: function () {
+                                    alert('操作失敗! 請稍後再試。');
+                                }
+                            });
+                        }
+                    } else {
+                        // 如果不需要確認，直接執行退選操作
+                        alert('操作成功!');
+                        // 自動更新課程列表
+                        $("#submitButton").click();
+                    }
                 },
-                error: function (response) {
-                    // 顯示添加失敗的提示
-                    alert('課程退選失敗! 選擇的課程ID為:' + courseId + '與伺服器出現錯誤');
+                error: function () {
+                    alert('操作失敗! 請稍後再試。');
                 }
             });
         });
     </script>
+    
 </body>
 </html>

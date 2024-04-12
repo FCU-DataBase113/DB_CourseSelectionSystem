@@ -198,13 +198,49 @@ def withdraw_courses():
         cursor.execute("SELECT * FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
         course = cursor.fetchone()
         if course:
-            # 刪除課程
+            # 檢查是否為必修課程
+            cursor.execute("SELECT required FROM Course WHERE course_id = %s;", (course_id,))
+            required = cursor.fetchone()['required']
+            if required == '必修':
+                # 如果是必修課程，將提示訊息傳送到前端並等待用戶的確認
+                return jsonify({"message": "這是一門必修課程，確定要退選嗎？", "confirm_required": True})
+            else:
+                # 如果不是必修課程，直接執行退選操作
+                # 刪除課程
+                cursor.execute("DELETE FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
+                cursor.execute("UPDATE Course set curNumOfSelect  = curNumOfSelect - 1 where  course_id = %s;", (course_id,))
+                conn.commit()  # 提交事務
+                return jsonify({"message": "Course withdrawn successfully."})
+        else:
+            return jsonify({"error": "Course not found or not selected by the current user."}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  # 錯誤處理
+    finally:
+        # 關閉 cursor 和資料庫連接
+        cursor.close()
+        conn.close()
+
+@app.route('/withdraw_courses_without_check', methods=['POST'])
+def withdraw_courses_without_check():
+    # 聲明全局變量
+    global logged_in_user_id
+    # 建立資料庫連接
+    conn = sql_log()
+    # 獲取前端傳遞的課程ID
+    course_id = request.form.get('course_id')
+    # 建立 cursor 物件 - 字典
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        # 檢查課程是否存在並且屬於當前用戶
+        cursor.execute("SELECT * FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
+        course = cursor.fetchone()
+        if course:
             cursor.execute("DELETE FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
             cursor.execute("UPDATE Course set curNumOfSelect  = curNumOfSelect - 1 where  course_id = %s;", (course_id,))
             conn.commit()  # 提交事務
             return jsonify({"message": "Course withdrawn successfully."})
         else:
-            return jsonify({"error": "Course not found   or not selected by the current user."}), 404
+            return jsonify({"error": "Course not found or not selected by the current user."}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # 錯誤處理
     finally:
