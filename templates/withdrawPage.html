@@ -40,7 +40,7 @@
             if (previousPage) {
                 window.location.href = previousPage;
             } else {
-                window.location.href = 'index.html';
+                window.location.href = '/course_selection';
             }
         });
 
@@ -59,6 +59,12 @@
                             '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
                     }
                     $('#dataDisplay').html(html);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status == 404) {
+                        alert('已退選全部課程');
+                        window.location.href = '/course_selection';//沒有課可以退選了 跳回選課頁面
+                    }
                 }
             });
         });
@@ -74,6 +80,8 @@
                 success: function (response) {
                     // 顯示添加成功的提示
                     alert('操作成功!');
+                    // 自動更新課程列表
+                    $("#submitButton").click();
                 },
                 error: function (response) {
                     // 顯示添加失敗的提示
@@ -81,9 +89,6 @@
                 }
             });
         });
-
-            
-        
     </script>
 </body>
 </html>
