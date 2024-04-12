@@ -204,7 +204,7 @@ def withdraw_courses():
             conn.commit()  # 提交事務
             return jsonify({"message": "Course withdrawn successfully."})
         else:
-            return jsonify({"error": "Course not found or not selected by the current user."}), 404
+            return jsonify({"error": "Course not found   or not selected by the current user."}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # 錯誤處理
     finally:
