@@ -193,6 +193,14 @@ def withdraw_courses():
     course_id = request.form.get('course_id')
     # 建立 cursor 物件 - 字典
     cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+
+    # 檢查退選後是否會低於9學分
+    cursor.execute("SELECT credit FROM Course WHERE course_id = %s;", (course_id,))
+    numOfCredits = cursor.fetchone()['credit']
+    if will_credit_Under_limit(logged_in_user_id, numOfCredits):
+        # 如果退選後學分低於9，則向前端返回錯誤訊息
+        return jsonify({"error": "無法低於9學分!請選擇其他課程。"}), 400
+
     try:
         # 檢查課程是否存在並且屬於當前用戶
         cursor.execute("SELECT * FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
@@ -406,6 +414,20 @@ def is_credit_Over_limit(student_id):
     if result[0] is not None :
         total_credit = int(result[0])
         return total_credit > 30
+    else :
+        return False
+    
+# 確保學分沒有低於下限
+def will_credit_Under_limit(student_id, credits):
+    query = """SELECT SUM(c.credit) FROM SelectedCourse sc JOIN Course c on sc.course_id =  c.course_id WHERE sc.student_id = %s"""
+    conn = sql_log()
+    cursor = conn.cursor()
+    cursor.execute(query,(student_id,))
+    result = cursor.fetchone()
+    print(result)
+    if result[0] is not None :
+        total_credit = int(result[0])
+        return total_credit - credits < 9
     else :
         return False
 
