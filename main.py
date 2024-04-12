@@ -17,7 +17,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                        #    port = 3307,
+                           port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -205,10 +205,14 @@ def add_course():
         # 如果課程時間有衝突
         print("Course time conflict")
         return jsonify({"success": False, "error": "Course time conflict"});
-    elif is_course_same(course_id, logged_in_user_id):
+    elif is_selected_course_have_same(course_id, logged_in_user_id):
         # 如果課程有相同名稱的被選擇
         print("Course is have the same")
         return jsonify({"success": False, "error": "Course is have the same"});
+    elif is_credit_Over_limit(logged_in_user_id):
+        # 如果學分超過上限
+        print("Credit is over the limit")
+        return jsonify({"success": False, "error": "Credit is over the limit (30)"});
     else:
         # 插入課程ID和學生ID
         try:
@@ -281,7 +285,7 @@ def is_course_time_conflict(course_id, student_id):
     return result is None
 
 # 確保沒有相同名稱的課程
-def is_course_same(course_id, student_id):
+def is_selected_course_have_same(course_id, student_id):
     query = """SELECT c.course_name
     FROM SelectedCourse sc
     JOIN Course c ON sc.course_id = c.course_id
@@ -292,6 +296,20 @@ def is_course_same(course_id, student_id):
     result = cursor.fetchone()
     # 如果查詢結果為 None，則表示該課程已經被選擇
     return result is not None
+
+# 確保學分沒有超過上限
+def is_credit_Over_limit(student_id):
+    query = """SELECT SUM(c.credit) FROM SelectedCourse sc JOIN Course c on sc.course_id =  c.course_id WHERE sc.student_id = %s"""
+    conn = sql_log()
+    cursor = conn.cursor()
+    cursor.execute(query,(student_id,))
+    result = cursor.fetchone()
+    print(result)
+    if result[0] is not None :
+        total_credit = int(result[0])
+        return total_credit > 30
+    else :
+        return False
 
 # 抓取已選課程
 def get_schedule_data():
