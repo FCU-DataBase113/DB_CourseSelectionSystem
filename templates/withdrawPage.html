@@ -35,6 +35,10 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        // 當文檔加載完成後立即執行更新
+        $(document).ready(function () {
+            $("#submitButton").click();
+        });
         // 當使用者按下返回選課頁面按鈕時
         $("#returnToOriginalPage").click(function () {
             var previousPage = localStorage.getItem('previousPage');
