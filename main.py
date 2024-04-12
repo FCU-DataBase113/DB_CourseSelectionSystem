@@ -200,6 +200,7 @@ def withdraw_courses():
         if course:
             # 刪除課程
             cursor.execute("DELETE FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
+            cursor.execute("UPDATE Course set curNumOfSelect  = curNumOfSelect - 1 where  course_id = %s;", (course_id,))
             conn.commit()  # 提交事務
             return jsonify({"message": "Course withdrawn successfully."})
         else:
