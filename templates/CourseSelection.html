@@ -111,12 +111,8 @@
     <!-- 更新課表按鈕 -->
     <button type="button" id="updateScheduleButton">更新課表</button>
 
-    <form action="#" method="POST">
-        <label for="selected-course">選擇要退選的課程：</label>
-        <select id="selected-course" name="selected-course">
-            <!-- 這裡將動態添加已選擇的課程選項 -->
-        </select>
-        <button type="submit">退選</button>
+    <form action="/course_deselection" method="GET">
+        <button type="submit" id="redirectTowithdrawPage">退選頁面</button>
     </form>
 
     <script>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course.css') }}">
+    <title>退選頁面</title>
+</head>
+<body>
+    <h1>退選頁面</h1>
+
+    <!-- 顯示已選課程的表格 -->
+    <div id="selectForm" action="/get_selected_courses" method="POST">
+        <table>
+            <thead>
+                <tr>
+                    <th>課程名稱</th>
+                    <th>學分</th>
+                    <th>年級</th>
+                    <th>課程介紹</th>
+                </tr>
+            </thead>
+            <tbody id="dataDisplay">
+                <!-- 此處將使用 JavaScript 填充選課程表 -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 觸發按鈕 -->
+    <button id="submitButton">更新</button>
+
+    <!-- 返回選課頁面的按鈕 -->
+    <button type="button" id="returnToOriginalPage">返回選課頁面</button>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        // 當使用者按下返回選課頁面按鈕時
+        $("#returnToOriginalPage").click(function () {
+            var previousPage = localStorage.getItem('previousPage');
+            if (previousPage) {
+                window.location.href = previousPage;
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+
+        // 當使用者按下觸發按鈕時
+        $("#submitButton").click(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/get_selected_courses',
+                type: 'POST',
+                data: $('#selectForm').serialize(),
+                success: function (response) {
+                    var courses = response;
+                    var html = '';
+                    for (var i = 0; i < courses.length; i++) {
+                        html += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
+                            '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
+                    }
+                    $('#dataDisplay').html(html);
+                }
+            });
+        });
+        
+        // 將所輸入的回傳給後端
+        $(document).on('click', '.select-course', function () {
+            // 指定 data-id 為要回傳的值
+            var courseId = $(this).attr('data-id');
+            $.ajax({
+                url: '/withdraw_courses',
+                type: 'POST',
+                data: { course_id: courseId.toString() }, // 將選擇的課程ID作為數據傳遞給後端
+                success: function (response) {
+                    // 顯示添加成功的提示
+                    alert('操作成功!');
+                },
+                error: function (response) {
+                    // 顯示添加失敗的提示
+                    alert('課程退選失敗! 選擇的課程ID為:' + courseId + '與伺服器出現錯誤');
+                }
+            });
+        });
+
+            
+        
+    </script>
+</body>
+</html>

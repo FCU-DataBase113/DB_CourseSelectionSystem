@@ -17,7 +17,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                           port = 3307,
+                        #    port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -150,6 +150,67 @@ def check_user(student_id, password):
 @app.route('/course_selection', methods=['GET', 'POST']) 
 def course_selection():
     return render_template('CourseSelection.html')
+
+# 課程退選
+@app.route('/course_deselection', methods=['GET', 'POST']) 
+def course_deselection():
+    return render_template('withdrawPage.html')
+
+# 取得所有已選課程
+@app.route('/get_selected_courses', methods=['POST'])
+def get_selected_courses():
+    # 聲明全局變量
+    global logged_in_user_id
+    # 建立資料庫連接
+    conn = sql_log()
+    # 建立 cursor 物件 - 字典
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        # 運用 SQL 語法查詢該系所的 id
+        cursor.execute("SELECT * FROM selectedcourse WHERE student_id = %s;", (logged_in_user_id,))
+        studentID_result = cursor.fetchone()
+        # 有無找到相關資訊
+        if studentID_result:
+            cursor.execute("SELECT * FROM Course WHERE course_id IN(SELECT course_id FROM selectedcourse WHERE student_id = %s);", (logged_in_user_id,))
+            courses = cursor.fetchall()
+            return jsonify(courses)
+        else:
+            error_msg = {"error": "Course not found"}
+            return jsonify(error_msg), 404
+    finally:
+        # 關閉 cursor 和資料庫連接
+        cursor.close()
+        conn.close()
+
+# 退選課程
+@app.route('/withdraw_courses', methods=['POST'])
+def withdraw_courses():
+    # 聲明全局變量
+    global logged_in_user_id
+    # 建立資料庫連接
+    conn = sql_log()
+    # 獲取前端傳遞的課程ID
+    course_id = request.form.get('course_id')
+    # 建立 cursor 物件 - 字典
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    try:
+        # 檢查課程是否存在並且屬於當前用戶
+        cursor.execute("SELECT * FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
+        course = cursor.fetchone()
+        if course:
+            # 刪除課程
+            cursor.execute("DELETE FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
+            conn.commit()  # 提交事務
+            return jsonify({"message": "Course withdrawn successfully."})
+        else:
+            return jsonify({"error": "Course not found or not selected by the current user."}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500  # 錯誤處理
+    finally:
+        # 關閉 cursor 和資料庫連接
+        cursor.close()
+        conn.close()
+
 
 # 顯示該系所的課程
 @app.route('/get_courses', methods=['POST'])
