@@ -134,7 +134,7 @@
                         for (var i = 0; i < courses.length; i++) {
                             // 將 button 賦予 data-id 為該課程相對應的 course_id
                             html += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
-                                '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
+                                '</td><td>' + courses[i].required + '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
                         }
                         // 將動態生成的課程表插入到頁面中
                         $('#dataDisplay').html('<table>' + html + '</table>');
