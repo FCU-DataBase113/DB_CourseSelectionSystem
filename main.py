@@ -123,6 +123,13 @@ def insert_user(student_id, password, grade, d_id):
         # 如果查詢結果為 None，則表示資料庫中沒有該名稱，可以新增
         cursor.execute(query)
         conn.commit()
+        # 新增該學系的必修課程到 SelectedCourse
+        cursor.execute("SELECT course_id FROM Course WHERE department_id = %s AND required = 1 AND grade = %s ", (d_id, grade))
+        All_Need_to_courses = cursor.fetchall()
+        for course in All_Need_to_courses:
+            insert_course_query = "INSERT INTO SelectedCourse (course_id, student_id) VALUES (%s, %s)"
+            cursor.execute(insert_course_query, (course[0], student_id))
+            conn.commit()
         return True
     else:
         # 如果查詢結果不為 None，則表示資料庫中已存在該名稱，不應新增

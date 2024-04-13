@@ -41,7 +41,7 @@ CREATE TABLE `Course` (
     `course_id`         VARCHAR (10) PRIMARY KEY,
     `course_name`       VARCHAR (500) NOT NULL,
     `department_id`     INT NOT NULL,
-    `required`          VARCHAR (500) NOT NULL,
+    `required`          INT NOT NULL DEFAULT 0,
     `credit`            INT NOT NULL, 
     `description`       VARCHAR (500),
     `prerequisite_id`   VARCHAR (10),
@@ -50,32 +50,32 @@ CREATE TABLE `Course` (
     `curNumOfSelect`    INT NOT NULL DEFAULT 0
 );
 
-INSERT INTO `Course` VALUES ('001', '程式設計', 1, '必修', 3, '一門呱呱課程呱呱', 'null', 1, 2, 0);
-INSERT INTO `Course` VALUES ('002', '資料結構', 1, '必修', 3, '一門很重要的課程呱', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('003', '演算法', 1, '必修', 3, '一門涵蓋廣泛的呱呱', '001', 3, 2, 0);
-INSERT INTO `Course` VALUES ('004', '計算機組織與結構', 1, '必修', 3, '一門呱呱與實踐相結合的課程', '001', 2, 5, 0);
-INSERT INTO `Course` VALUES ('005', '離散數學', 1, '必修', 3, '一呱基礎性的課程', 'null', 1, 2, 0);
-INSERT INTO `Course` VALUES ('006', '系統程式', 1, '必修', 3, '一呱基礎性的課程', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('007', '系統程式', 1, '必修', 3, '一呱基礎性的課程', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('008', '離散數學', 2, '必修', 3, '一呱基礎性的課程', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('009', '數學離散', 2, '必修', 3, '一呱基礎性的課程', 'null', 1, 2, 0);
-INSERT INTO `Course` VALUES ('010', '離散數學離散', 2, '必修', 3, '一呱基礎性的課程', 'null', 3, 2, 0);
-INSERT INTO `Course` VALUES ('011', '數學離散數學', 2, '必修', 3, '一呱基礎性的課程', 'null', 4, 2, 0);
-INSERT INTO `Course` VALUES ('012', '呱呱鴨呱呱', 2, '必修', 3, '一呱基礎性的課程', 'null', 3, 2, 0);
+INSERT INTO `Course` VALUES ('001', '程式設計', 1, 1, 3, '一門呱呱課程呱呱', 'null', 1, 2, 0);
+INSERT INTO `Course` VALUES ('002', '資料結構', 1, 1, 3, '一門很重要的課程呱', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('003', '演算法', 1, 1, 3, '一門涵蓋廣泛的呱呱', '001', 3, 2, 0);
+INSERT INTO `Course` VALUES ('004', '計算機組織與結構', 1, 1, 3, '一門呱呱與實踐相結合的課程', '001', 2, 5, 0);
+INSERT INTO `Course` VALUES ('005', '離散數學', 1, 1, 3, '一呱基礎性的課程', 'null', 1, 2, 0);
+INSERT INTO `Course` VALUES ('006', '系統程式', 1, 1, 3, '一呱基礎性的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('007', '系統程式', 1, 1, 3, '一呱基礎性的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('008', '離散數學', 2, 1, 3, '一呱基礎性的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('009', '數學離散', 2, 1, 3, '一呱基礎性的課程', 'null', 1, 2, 0);
+INSERT INTO `Course` VALUES ('010', '離散數學離散', 2, 1, 3, '一呱基礎性的課程', 'null', 3, 2, 0);
+INSERT INTO `Course` VALUES ('011', '數學離散數學', 2, 1, 3, '一呱基礎性的課程', 'null', 4, 2, 0);
+INSERT INTO `Course` VALUES ('012', '呱呱鴨呱呱', 2, 1, 3, '一呱基礎性的課程', 'null', 3, 2, 0);
 
-INSERT INTO `Course` VALUES ('013', '網路程式設計', 1, '選修', 3, '一門涉及網路技術的課程', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('014', '資料庫系統', 1, '選修', 3, '一門關於資料庫設計與管理的課程', 'null', 3, 2, 0);
-INSERT INTO `Course` VALUES ('015', '人工智慧導論', 1, '選修', 3, '一門介紹人工智慧基礎概念的課程', 'null', 4, 2, 0);
-INSERT INTO `Course` VALUES ('016', '機器學習基礎', 1, '選修', 3, '一門介紹機器學習基本原理的課程', 'null', 4, 2, 0);
-INSERT INTO `Course` VALUES ('017', '數據挖掘技術', 1, '選修', 3, '一門介紹數據挖掘方法與工具的課程', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('018', '網路安全基礎', 1, '選修', 3, '一門介紹網路安全基本概念的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('013', '網路程式設計', 1, 0, 3, '一門涉及網路技術的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('014', '資料庫系統', 1, 0, 3, '一門關於資料庫設計與管理的課程', 'null', 3, 2, 0);
+INSERT INTO `Course` VALUES ('015', '人工智慧導論', 1, 0, 3, '一門介紹人工智慧基礎概念的課程', 'null', 4, 2, 0);
+INSERT INTO `Course` VALUES ('016', '機器學習基礎', 1, 0, 3, '一門介紹機器學習基本原理的課程', 'null', 4, 2, 0);
+INSERT INTO `Course` VALUES ('017', '數據挖掘技術', 1, 0, 3, '一門介紹數據挖掘方法與工具的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('018', '網路安全基礎', 1, 0, 3, '一門介紹網路安全基本概念的課程', 'null', 2, 2, 0);
 
-INSERT INTO `Course` VALUES ('019', '軟體工程概論', 2, '選修', 3, '一門介紹軟體工程基礎概念的課程', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('020', '電腦圖學入門', 2, '選修', 3, '一門介紹電腦圖學基礎知識的課程', 'null', 3, 2, 0);
-INSERT INTO `Course` VALUES ('021', '多媒體技術導論', 2, '選修', 3, '一門介紹多媒體技術基本原理的課程', 'null', 4, 2, 0);
-INSERT INTO `Course` VALUES ('022', '編譯原理與技術', 2, '選修', 3, '一門介紹編譯原理與技術的課程', 'null', 1, 2, 0);
-INSERT INTO `Course` VALUES ('023', '物聯網導論', 2, '選修', 3, '一門介紹物聯網基礎知識的課程', 'null', 2, 2, 0);
-INSERT INTO `Course` VALUES ('024', '嵌入式系統設計', 2, '選修', 3, '一門介紹嵌入式系統設計的課程', 'null', 1, 2, 0);
+INSERT INTO `Course` VALUES ('019', '軟體工程概論', 2, 0, 3, '一門介紹軟體工程基礎概念的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('020', '電腦圖學入門', 2, 0, 3, '一門介紹電腦圖學基礎知識的課程', 'null', 3, 2, 0);
+INSERT INTO `Course` VALUES ('021', '多媒體技術導論', 2, 0, 3, '一門介紹多媒體技術基本原理的課程', 'null', 4, 2, 0);
+INSERT INTO `Course` VALUES ('022', '編譯原理與技術', 2, 0, 3, '一門介紹編譯原理與技術的課程', 'null', 1, 2, 0);
+INSERT INTO `Course` VALUES ('023', '物聯網導論', 2, 0, 3, '一門介紹物聯網基礎知識的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('024', '嵌入式系統設計', 2, 0, 3, '一門介紹嵌入式系統設計的課程', 'null', 1, 2, 0);
 
 
 
