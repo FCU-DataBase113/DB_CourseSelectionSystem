@@ -216,7 +216,7 @@ def withdraw_courses():
             # 檢查是否為必修課程
             cursor.execute("SELECT required FROM Course WHERE course_id = %s;", (course_id,))
             required = cursor.fetchone()['required']
-            if required == '必修':
+            if required == 1:
                 # 如果是必修課程，將提示訊息傳送到前端並等待用戶的確認
                 return jsonify({"message": "這是一門必修課程，確定要退選嗎？", "confirm_required": True})
             else:
