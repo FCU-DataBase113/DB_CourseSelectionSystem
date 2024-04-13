@@ -17,7 +17,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                        #    port = 3307,
+                           port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -322,7 +322,7 @@ def add_course():
         # 如果課程有相同名稱的被選擇
         print("Course is have the same")
         return jsonify({"success": False, "error": "Course is have the same"});
-    elif is_credit_Over_limit(logged_in_user_id):
+    elif is_credit_Over_limit(logged_in_user_id, course_id):
         # 如果學分超過上限
         print("Credit is over the limit")
         return jsonify({"success": False, "error": "Credit is over the limit (30)"});

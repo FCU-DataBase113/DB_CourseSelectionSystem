@@ -207,7 +207,7 @@
                         for (var k = 0; k < scheduleData.length; k++) {
                             console.log(scheduleData[k][1] + " " + scheduleData[k][2] + " " + scheduleData[k][3]);
                             if (scheduleData[k][1] == (j + 1) && scheduleData[k][2] == (i + 1)) {
-                                courseName = scheduleData[k][3];
+                                courseName = scheduleData[k][3] + " " + scheduleData[k][0]; 
                                 break;
                             }
                         }
