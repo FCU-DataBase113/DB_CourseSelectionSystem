@@ -17,7 +17,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                        #    port = 3307,
+                           port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -404,16 +404,22 @@ def is_selected_course_have_same(course_id, student_id):
     return result is not None
 
 # 確保學分沒有超過上限
-def is_credit_Over_limit(student_id):
+def is_credit_Over_limit(student_id, course_id):
     query = """SELECT SUM(c.credit) FROM SelectedCourse sc JOIN Course c on sc.course_id =  c.course_id WHERE sc.student_id = %s"""
     conn = sql_log()
     cursor = conn.cursor()
     cursor.execute(query,(student_id,))
     result = cursor.fetchone()
     print(result)
+    # 確定這次的學分加上 總學分 < 30
+    now_query = """SELECT credit FROM Course WHERE course_id = %s"""
+    cursor.execute(now_query,(course_id,))
+    now_result = cursor.fetchone()
+
     if result[0] is not None :
         total_credit = int(result[0])
-        return total_credit > 30
+        now_credit = int(now_result[0])
+        return (total_credit + now_credit) > 30
     else :
         return False
     
