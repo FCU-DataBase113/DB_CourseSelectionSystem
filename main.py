@@ -284,6 +284,17 @@ def get_courses():
         dept_id = dept_result['department_id'] 
         cursor.execute("SELECT * FROM Course WHERE department_id = %s;", (dept_id,))
         courses = cursor.fetchall()
+
+        # 對每門課程進行處理，獲取該課程的上課時間
+        for course in courses:
+            course_id = course['course_id']
+            # 從 CourseTime 表中查詢該課程的上課時間
+            cursor.execute("SELECT week_day, time_index FROM CourseTime WHERE course_id = %s", (course_id,))
+            course_times = cursor.fetchall()
+            # 將查詢到的上課時間資料加入到課程的字典中
+            course['course_times'] = course_times
+            print(course)
+
         return jsonify(courses)
     else:
         error_msg = {"error": "Course not found"}
