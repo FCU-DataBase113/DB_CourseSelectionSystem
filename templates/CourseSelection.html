@@ -130,14 +130,17 @@
                     // 指定請求成功時要執行的函數
                     success: function (response) {
                         var courses = response;
-                        var html = '';
+                        
+                        var headerRow = "<tr><th>名稱</th><th>學分</th><th>年級</th><th>必修與否</th><th>課程描述</th><th>選擇鍵<th></tr>";
+                        
+                        var what_course_have = '';
                         for (var i = 0; i < courses.length; i++) {
                             // 將 button 賦予 data-id 為該課程相對應的 course_id
-                            html += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
-                                '</td><td>' + courses[i].required + '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
+                            what_course_have += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
+                                '</td><td>' + courses[i].required +'</td><td>'  + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
                         }
                         // 將動態生成的課程表插入到頁面中
-                        $('#dataDisplay').html('<table>' + html + '</table>');
+                        $('#dataDisplay').html('<table>'+ headerRow + what_course_have + '</table>');
                     }
                 });
             });
