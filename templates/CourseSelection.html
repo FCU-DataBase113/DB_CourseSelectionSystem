@@ -114,10 +114,31 @@
     <form action="/course_deselection" method="GET">
         <button type="submit" id="redirectTowithdrawPage">退選頁面</button>
     </form>
+    <form action="/history" method="GET">
+        <button type="submit" id="redirectTowithdrawPage">修課歷史</button>
+    </form>
 
     <script>
         // 確保網頁已經載入完畢
         $(document).ready(function () {
+            // 當使用者按下更新課表按鈕時
+            $("#updateScheduleButton").click(function () {
+                // 發送異步的HTTP請求 發送了一個GET請求到URL為'/update_schedule'的後端接口
+                $.ajax({
+                    url: '/update_schedule',
+                    type: 'GET',
+                    // 指定請求成功時要執行的函數
+                    success: function (response) {
+                        // 更新課表
+                        alert('課表更新成功!')
+                        // 在工作列可看到獲取的資料
+                        console.log(response);
+                        updateSchedule(response);
+                    }
+                });
+            });
+            // 載入頁面時自動更新課表
+            $("#updateScheduleButton").click();
             // 當使用者按下選擇按鈕時
             $("#submitButton").click(function (event) {
                 // 防止表單預設的提交行為
@@ -167,6 +188,7 @@
                         if (response.success) {
                             // 顯示添加成功的提示
                             alert('課程添加成功! 選擇的課程ID為:' + courseId + ' , ' + response.message);
+                            $("#updateScheduleButton").click();
                         } else {
                             // 顯示添加失敗的提示
                             alert('課程添加失敗! 錯誤訊息: ' + response.error);
@@ -179,22 +201,7 @@
                 });
             });
 
-            // 當使用者按下更新課表按鈕時
-            $("#updateScheduleButton").click(function () {
-                // 發送異步的HTTP請求 發送了一個GET請求到URL為'/update_schedule'的後端接口
-                $.ajax({
-                    url: '/update_schedule',
-                    type: 'GET',
-                    // 指定請求成功時要執行的函數
-                    success: function (response) {
-                        // 更新課表
-                        alert('課表更新成功!')
-                        // 在工作列可看到獲取的資料
-                        console.log(response);
-                        updateSchedule(response);
-                    }
-                });
-            });
+            
 
             // 更新課表的table
             function updateSchedule(scheduleData) {

@@ -563,3 +563,66 @@ def update_cur_num_of_select(course_id, new_value):
 def update_schedule():
     schedule_data = get_schedule_data()  # 此函數可以從數據庫中獲取課表數據
     return jsonify(schedule_data)
+
+
+# 尋找課程評分
+@app.route('/rate', methods=['GET', 'POST'])
+def rate():
+    if request.method == 'POST':
+        course_id = request.form.get('course_id')
+
+        conn = sql_log()
+        c = conn.cursor()
+
+        # 查詢 Course 表
+        c.execute("SELECT * FROM Course WHERE course_id=%s", (course_id,))
+        course = c.fetchone()
+
+        # 查詢 COURSE_RATE 表
+        c.execute("SELECT * FROM COURSE_RATE WHERE course_id=%s", (course_id,))
+        course_rate = c.fetchone()
+
+        conn.close()
+
+        if course and course_rate:
+            course_name = course[1]
+            rate = course_rate[1] / course_rate[3] if course_rate[3] != 0 else 0
+            comments = course_rate[2].split('::')
+            comments = comments[1:]
+            return render_template('check_rate.html', course_name=course_name, rate=rate, comments=comments)
+
+        return render_template('check_rate.html', course_name=None)
+
+    return render_template('check_rate.html', course_name=None)
+# 查看選課紀錄
+@app.route('/history', methods=['GET', 'POST'])
+def history():
+    global logged_in_user_id
+    conn = sql_log()
+    c = conn.cursor()
+    # 查詢 SelectedCourse 表
+    c.execute("SELECT * FROM historytable WHERE student_id=%s", (logged_in_user_id,))
+    selected_courses = c.fetchall()
+    # 查詢 Course 表
+    courses = []
+    for selected_course in selected_courses:
+        courses.append(selected_course)
+    conn.close()
+    return render_template('history.html', courses=courses)
+# 進行評分
+@app.route('/to_rate/<string:course_id>', methods=['GET', 'POST'])
+def to_rate(course_id):
+    if request.method == 'POST':
+        rate = int(request.form.get('rate'))
+        print(rate)
+        comment = request.form.get('comment')
+        conn = sql_log()
+        c = conn.cursor()
+        print(course_id)
+        # 更新 COURSE_RATE 表
+        c.execute("UPDATE COURSE_RATE SET rate = rate + %s, comment=CONCAT(comment, '::', %s), comment_total=comment_total+1 WHERE course_id=%s",
+        (rate, comment, course_id))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('course_selection'))
+    return render_template('to_rate.html', course_id=course_id)

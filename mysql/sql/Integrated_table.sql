@@ -150,9 +150,9 @@ CREATE TABLE `HistoryTable` (
     PRIMARY KEY (`history_id`)
 );
 
-INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('001', '程式設計', 'Root');
-INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('004', '微積分', 'Root');
-INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('005', '線性代數', 'Root');
+INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('001', '程式設計', 'D1234567');
+INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('004', '微積分', 'D1234567');
+INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('005', '線性代數', 'D1234567');
 
 /* -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('001', 'D1234567');
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('002', 'E2345678');
@@ -160,9 +160,33 @@ INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('0
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('004', 'G4567890');
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('005', 'H5678901'); */
 
-CREATE TABLE 'COURSE_RATE' (
+CREATE TABLE `COURSE_RATE` (
     `course_id`         VARCHAR (10) PRIMARY KEY,
     `rate`              INT,
-    'comment'           VARCHAR (500)
+    `comment`           VARCHAR (500),
+    `comment_total`    INT
 );
-INSERT INTO 'COURSE_RATE' VALUES ('001', 4, '很好,狗都不選,好課,老師愛了');
+INSERT INTO `COURSE_RATE` VALUES ('001', 4, 'comment::狗都不修',1);
+INSERT INTO `COURSE_RATE` VALUES ('002', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('003', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('004', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('005', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('006', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('007', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('008', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('009', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('010', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('011', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('012', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('013', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('014', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('015', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('016', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('017', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('018', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('019', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('020', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('021', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('022', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('023', 0, 'comment', 0);
+INSERT INTO `COURSE_RATE` VALUES ('024', 0, 'comment', 0);

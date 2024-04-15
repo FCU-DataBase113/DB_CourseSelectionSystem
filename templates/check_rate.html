@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>課程評價</title>
+</head>
+<body>
+    <form action="/rate" method="post">
+        <label for="course_id">Course ID:</label>
+        <input type="text" id="course_id" name="course_id">
+        <input type="submit" value="Search">
+    </form>
+    
+    {% if course_name %}
+        <h1>{{ course_name }}</h1>
+        <p>評分：{{ rate }} / 5.0</p>
+        <h2>評論：</h2>
+        <ul>
+            {% for comment in comments %}
+                <li>{{ comment }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

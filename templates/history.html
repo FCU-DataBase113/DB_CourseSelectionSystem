@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>課程歷史</title>
+</head>
+<body>
+    <h1>課程歷史</h1>
+    <ul>
+    {% for course in courses %}
+        <li>
+            課程代碼: {{ course[1] }}, 課程名稱: {{ course[2] }}
+            <a href="/to_rate/{{ course[1] }}">評價此課程</a>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

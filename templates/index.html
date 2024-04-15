@@ -30,21 +30,28 @@
     <nav class="float-nav-outer" id="main">
         <ul class="float-nav">
             <li><a href="{{ url_for('register') }}">註冊</a></li>   
-            <li><a href="{{ url_for('login') }}">登入</a></li>      
+            <li><a href="{{ url_for('login') }}">登入</a></li>  
+            <li><a href="{{ url_for('rate') }}">查詢課程評價</a></li>    
         </ul>
     </nav>
 
     <div class="container">
         <h1 style="color: white;">歡迎來到選課系統</h1>
         <p style="color: white;">在這裡您可以進行課程選擇，請登入或註冊以繼續。</p>
-        <form>
-            <input type="text" class="search-box" placeholder="輸入關鍵字檢索課程(unavaliable)">
+        <form id="searchForm" action="https://www.dcard.tw/search" method="get">
+            <input type="text" class="search-box" name="query" placeholder="輸入關鍵字檢索課程(連結至dcard校版)">
             <button type="submit">搜尋</button>
         </form>
         <img src="/static/RGBduck.gif" class="image_rotate">
         <img src="/static/RGBduck.gif" class="image_rotate">
         <img src="/static/RGBduck.gif" class="image_rotate">
     </div>
-    
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var query = this.query.value;
+            window.location.href = 'https://www.dcard.tw/search?query=' + encodeURIComponent(query) + '&forum=fcu';
+        });
+    </script>
 </body>
 </html>
