@@ -145,3 +145,10 @@ CREATE TABLE `SelectedCourse` (
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('003', 'F3456789');
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('004', 'G4567890');
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('005', 'H5678901');
+
+CREATE TABLE 'COURSE_RATE' (
+    `course_id`         VARCHAR (10) PRIMARY KEY,
+    `rate`              INT,
+    'comment'           VARCHAR (500)
+);
+INSERT INTO 'COURSE_RATE' VALUES ('001', 4, '很好,狗都不選,好課,老師愛了');

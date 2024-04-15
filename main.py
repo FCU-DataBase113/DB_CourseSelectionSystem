@@ -87,6 +87,11 @@ def error():
         <p>帳號或密碼錯誤</p>
         <p><a href="/login">返回登入介面</a></p>
         """
+    elif wrong[0] == 2:
+        results = """
+        <p>輸入不能為空</p>
+        <p><a href="/register">返回註冊介面</a></p>
+        """
     return results
 
 # 登入帳號
@@ -111,6 +116,10 @@ def login():
 def insert_user(student_id, password, grade, d_id):
     # 建立連接
     conn = sql_log()
+    #all the input can't be empty,if empty return false
+    if student_id == "" or password == "" or grade == "" or d_id == "":
+        wrong[0] = 2
+        return False
     # 欲新增的 query 指令
     query = "INSERT INTO student (student_id, student_password, grade, department_id) VALUES ('{}', '{}', '{}', '{}');".format(
         student_id, password, grade, d_id)
@@ -139,6 +148,7 @@ def insert_user(student_id, password, grade, d_id):
         return True
     else:
         # 如果查詢結果不為 None，則表示資料庫中已存在該名稱，不應新增
+        wrong[0] = 0
         return False
     
 # 查詢使用者
