@@ -53,19 +53,20 @@ CREATE TABLE `Course` (
 INSERT INTO `Course` VALUES ('001', '程式設計', 1, 1, 3, '一門呱呱課程呱呱', 'null', 1, 2, 0);
 INSERT INTO `Course` VALUES ('002', '資料結構', 1, 1, 3, '一門很重要的課程呱', 'null', 2, 2, 0);
 INSERT INTO `Course` VALUES ('003', '演算法', 1, 1, 3, '一門涵蓋廣泛的呱呱', '001', 3, 2, 0);
-INSERT INTO `Course` VALUES ('004', '計算機組織與結構', 1, 1, 3, '一門呱呱與實踐相結合的課程', '001', 2, 5, 0);
-INSERT INTO `Course` VALUES ('005', '離散數學', 1, 1, 3, '一呱基礎性的課程', 'null', 1, 2, 0);
+INSERT INTO `Course` VALUES ('004', '微積分', 1, 1, 3, '一門呱呱與實踐相結合的課程', '001', 2, 5, 0);
+INSERT INTO `Course` VALUES ('005', '線性代數', 1, 1, 3, '一呱基礎性的課程', 'null', 1, 2, 0);
 INSERT INTO `Course` VALUES ('006', '系統程式', 1, 1, 3, '一呱基礎性的課程', 'null', 2, 2, 0);
 INSERT INTO `Course` VALUES ('007', '系統程式', 1, 1, 3, '一呱基礎性的課程', 'null', 2, 2, 0);
+
 INSERT INTO `Course` VALUES ('008', '離散數學', 2, 1, 3, '一呱基礎性的課程', 'null', 2, 2, 0);
 INSERT INTO `Course` VALUES ('009', '數學離散', 2, 1, 3, '一呱基礎性的課程', 'null', 1, 2, 0);
 INSERT INTO `Course` VALUES ('010', '離散數學離散', 2, 1, 3, '一呱基礎性的課程', 'null', 3, 2, 0);
 INSERT INTO `Course` VALUES ('011', '數學離散數學', 2, 1, 3, '一呱基礎性的課程', 'null', 4, 2, 0);
 INSERT INTO `Course` VALUES ('012', '呱呱鴨呱呱', 2, 1, 3, '一呱基礎性的課程', 'null', 3, 2, 0);
 
-INSERT INTO `Course` VALUES ('013', '網路程式設計', 1, 0, 3, '一門涉及網路技術的課程', 'null', 2, 2, 0);
+INSERT INTO `Course` VALUES ('013', '網路程式設計', 1, 0, 3, '一門涉及網路技術的課程，需要先完成「程式設計」', 'null', 2, 2, 0);
 INSERT INTO `Course` VALUES ('014', '資料庫系統', 1, 0, 3, '一門關於資料庫設計與管理的課程', 'null', 3, 2, 0);
-INSERT INTO `Course` VALUES ('015', '人工智慧導論', 1, 0, 3, '一門介紹人工智慧基礎概念的課程', 'null', 4, 2, 0);
+INSERT INTO `Course` VALUES ('015', '人工智慧導論', 1, 0, 3, '一門介紹人工智慧基礎概念的課程，需要先完成「微積分」與「線性代數」', 'null', 4, 2, 0);
 INSERT INTO `Course` VALUES ('016', '機器學習基礎', 1, 0, 3, '一門介紹機器學習基本原理的課程', 'null', 4, 2, 0);
 INSERT INTO `Course` VALUES ('017', '數據挖掘技術', 1, 0, 3, '一門介紹數據挖掘方法與工具的課程', 'null', 2, 2, 0);
 INSERT INTO `Course` VALUES ('018', '網路安全基礎', 1, 0, 3, '一門介紹網路安全基本概念的課程', 'null', 2, 2, 0);
@@ -122,29 +123,42 @@ INSERT INTO `CourseTime` VALUES ('024', '4', '8');
 
 /* Record the courses required relations */
 CREATE TABLE `PrerequisiteCourses` (
-    `prerequisite_id`       VARCHAR (10),
-    `course_id`             VARCHAR (10),
-    PRIMARY KEY (`prerequisite_id`, `course_id`)
+    `prerequisiteId`       INT AUTO_INCREMENT,
+    `MainSubject`          VARCHAR (10),
+    `RequiredCourse`       VARCHAR (10),
+    PRIMARY KEY (`prerequisiteId`)
 );
 
-INSERT INTO `PrerequisiteCourses` VALUES ('002', '003');
-INSERT INTO `PrerequisiteCourses` VALUES ('002', '004');
-INSERT INTO `PrerequisiteCourses` VALUES ('005', '002');
+INSERT INTO `PrerequisiteCourses` (`MainSubject`, `RequiredCourse`) VALUES ('人工智慧導論', '微積分');
+INSERT INTO `PrerequisiteCourses` (`MainSubject`, `RequiredCourse`) VALUES ('人工智慧導論', '線性代數');
+INSERT INTO `PrerequisiteCourses` (`MainSubject`, `RequiredCourse`) VALUES ('網路程式設計', '程式設計');
 
 
 /* Record the courses students have 'selected' */
 CREATE TABLE `SelectedCourse` (
-    `Selected_num`      INT AUTO_INCREMENT,
+    `selected_num`      INT AUTO_INCREMENT,
     `course_id`         VARCHAR (10),
     `student_id`        VARCHAR (10),
     PRIMARY KEY (`Selected_num`)
 );
 
--- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('001', 'D1234567');
+CREATE TABLE `HistoryTable` (
+    `history_id`        INT AUTO_INCREMENT,
+    `course_id`         VARCHAR (10),
+    `course_name`       VARCHAR (10),
+    `student_id`        VARCHAR (10),
+    PRIMARY KEY (`history_id`)
+);
+
+INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('001', '程式設計', 'Root');
+INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('004', '微積分', 'Root');
+INSERT INTO `HistoryTable` (`course_id`, `course_name`, `student_id`) VALUES ('005', '線性代數', 'Root');
+
+/* -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('001', 'D1234567');
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('002', 'E2345678');
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('003', 'F3456789');
 -- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('004', 'G4567890');
--- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('005', 'H5678901');
+-- INSERT INTO `SelectedCourse` (`course_id`, `student_id`) VALUES ('005', 'H5678901'); */
 
 CREATE TABLE 'COURSE_RATE' (
     `course_id`         VARCHAR (10) PRIMARY KEY,

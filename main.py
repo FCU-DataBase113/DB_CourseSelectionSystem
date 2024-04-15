@@ -18,7 +18,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                           port = 3307,
+                        #    port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -333,27 +333,31 @@ def add_course():
     if course_already_added(course_id, logged_in_user_id):
         # 如果課程已經被選擇過在自己的課表內
         print("Course already added")
-        return jsonify({"success": False, "error": "Course already added"});
+        return jsonify({"success": False, "error": "Course already added"})
     elif not is_student_of_department(course_id, logged_in_user_id):
         # 如果學生不是該系所的學生
         print("Not a student of the department")
-        return jsonify({"success": False, "error": "Not a student of the department"});
+        return jsonify({"success": False, "error": "Not a student of the department"})
     elif is_course_of_capacity(course_id):
         # 如果課程人數已滿
         print("Course is full")
-        return jsonify({"success": False, "error": "Course is full"});
+        return jsonify({"success": False, "error": "Course is full"})
     elif not is_course_time_conflict(course_id, logged_in_user_id):
         # 如果課程時間有衝突
         print("Course time conflict")
-        return jsonify({"success": False, "error": "Course time conflict"});
+        return jsonify({"success": False, "error": "Course time conflict"})
     elif is_selected_course_have_same(course_id, logged_in_user_id):
         # 如果課程有相同名稱的被選擇
         print("Course is have the same")
-        return jsonify({"success": False, "error": "Course is have the same"});
+        return jsonify({"success": False, "error": "Course is have the same"})
     elif is_credit_Over_limit(logged_in_user_id, course_id):
         # 如果學分超過上限
         print("Credit is over the limit")
-        return jsonify({"success": False, "error": "Credit is over the limit (30)"});
+        return jsonify({"success": False, "error": "Credit is over the limit (30)"})
+    elif not is_qualify(course_id, logged_in_user_id):
+        # 如果不符合課程擋修限制
+        print("You don't qualify the course blocking restrictions")
+        return jsonify({"success": False, "error": "You don't qualify the course blocking restrictions"})
     else:
         # 插入課程ID和學生ID
         try:
@@ -378,6 +382,49 @@ def add_course():
             conn.rollback()
             success_response = {"success": False, "error": str(e)}
         return jsonify(success_response)
+
+# 確保符合課程擋修限制的function
+def is_qualify(course_id, student_id):
+    # 建立資料庫連接
+    conn = sql_log()
+    cursor = conn.cursor()
+
+    try:
+        # 從 Course 表中獲取目標課程的主題
+        cursor.execute("SELECT course_name FROM Course WHERE course_id = %s", (course_id,))
+        course_name = cursor.fetchone()[0]
+
+        # 檢查是否有未修過的先修課程
+        cursor.execute("""
+            SELECT RequiredCourse
+            FROM PrerequisiteCourses
+            WHERE MainSubject = %s
+            AND RequiredCourse NOT IN (
+                SELECT course_name
+                FROM HistoryTable
+                WHERE student_id = %s
+            )
+        """, (course_name, student_id))
+
+        missing_courses = cursor.fetchall()
+
+        if len(missing_courses) == 0:
+            print("該學生已經修過所有需要的先修課程。")
+            return True
+        else:
+            print("以下先修課程尚未修過：")
+            for course in missing_courses:
+                print(course[0])
+                return False
+
+    except Exception as e:
+        print("查詢失敗:", str(e))
+
+    finally:
+        # 關閉 cursor 和資料庫連接
+        cursor.close()
+        conn.close()
+
 
 # 確保沒有選到重複課程的function
 def course_already_added(course_id, student_id):
