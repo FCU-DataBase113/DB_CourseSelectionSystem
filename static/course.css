@@ -58,6 +58,7 @@ h1:hover {
     /* justify-content: space-between; */
     align-items: center;
     margin-bottom: 5px; /* 可根據需要調整間距 */
+    margin-top: 20px; /* 添加上邊距 */
 }
 
 /* 確保按鈕之間的間距是固定的 */
