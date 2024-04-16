@@ -18,7 +18,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                        #    port = 3307,
+                           port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
@@ -113,6 +113,7 @@ def login():
             wrong[0] = 1
             return redirect(url_for('error'))
     return render_template('login.html')
+
 # 登出帳號
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
@@ -179,7 +180,11 @@ def check_user(student_id, password):
 # 課程選擇
 @app.route('/course_selection', methods=['GET', 'POST']) 
 def course_selection():
-    return render_template('CourseSelection.html')
+    global logged_in_user_id
+    if logged_in_user_id:
+        return render_template('CourseSelection.html', logged_in_user_id=logged_in_user_id)
+    else:
+        return redirect(url_for('login'))
 
 # 課程退選
 @app.route('/course_deselection', methods=['GET', 'POST']) 
@@ -541,28 +546,6 @@ def get_schedule_data():
     print(schedule_data)
 
     return schedule_data
-
-# 人數的更新
-def update_cur_num_of_select(course_id, new_value):
-    try:
-        # 連接資料庫
-        conn = sql_log()
-        cursor = conn.cursor()
-        
-        # 更新語句
-        query = "UPDATE Course SET curNumOfSelect = %s WHERE course_id = %s"
-        
-        # 執行更新操作
-        cursor.execute(query, (new_value, course_id))
-        
-        # 提交變更
-        conn.commit()
-        
-        print(f"Course ID {course_id} has been updated with curNumOfSelect = {new_value}")
-        
-    except Exception as e:
-        conn.rollback()
-        print(f"Error updating course: {e}")
 
 # 更新課表按鈕按下
 @app.route('/update_schedule', methods=['GET'])

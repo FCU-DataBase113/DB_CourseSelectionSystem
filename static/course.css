@@ -34,3 +34,21 @@ th, td {
     border: 1px solid #ccc; /* 添加邊框 */
     text-align: center; /* 文字居中對齊 */
 }
+
+@keyframes moveRight {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(20px); } /* 移動距離可以按需調整 */
+}
+
+h1 {
+    background: -webkit-linear-gradient(left, red, yellow, green, cyan, blue, violet);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: moveRight 2s infinite;
+    cursor: pointer;
+}
+
+h1:hover {
+    color: #ff6347;
+    text-decoration: underline;
+}

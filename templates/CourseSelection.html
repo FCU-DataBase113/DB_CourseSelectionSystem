@@ -13,6 +13,8 @@
 
     <h1>選課系統</h1>
     <!-- 加選表單 -->
+    <h2>Welcome {{ logged_in_user_id }}</h2>
+
     <h2>加選課程</h2>
     <!-- 顯示系所課程 -->
     <form id="selectForm" action="/get_courses" method="POST">
@@ -244,7 +246,6 @@
                 // 將表格添加到課表容器中
                 scheduleTable.append(table);
             }
-
 
         });
 
