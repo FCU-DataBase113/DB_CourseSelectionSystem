@@ -18,7 +18,7 @@ def sql_log():
     conn = MySQLdb.connect(host="127.0.0.1",
                            user="DBAdmin",
                            #WU
-                           port = 3307,
+                        #    port = 3307,
                            passwd="123",
                            db="CourseSelectionSystem",)
     return conn
