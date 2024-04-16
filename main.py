@@ -113,7 +113,13 @@ def login():
             wrong[0] = 1
             return redirect(url_for('error'))
     return render_template('login.html')
-
+# 登出帳號
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    global logged_in_user_id
+    logged_in_user_id = None
+    return redirect(url_for('index'))
+# 建立帳號
 def insert_user(student_id, password, grade, d_id):
     # 建立連接
     conn = sql_log()
