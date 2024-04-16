@@ -52,3 +52,15 @@ h1:hover {
     color: #ff6347;
     text-decoration: underline;
 }
+
+.button-container {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    margin-bottom: 5px; /* 可根據需要調整間距 */
+}
+
+/* 確保按鈕之間的間距是固定的 */
+.button-container button {
+    margin-right: 5px; /* 可根據需要調整間距 */
+}
