@@ -59,9 +59,9 @@ INSERT INTO `Course` VALUES ('046',  '德州撲克機率與統計'  , 9, 1, 1, '
 INSERT INTO `Course` VALUES ('047',  '麻將機率與統計' , 9, 1, 1,    '賠錢入門呱', 'null', 1, 10, 0);
 INSERT INTO `Course` VALUES ('048',  '學分機率與統計', 9, 1, 1,     '愛校呱'  , 'null', 3, 10, 0);
 
-INSERT INTO `Course` VALUES ('049',  '統'  , 10, 1, 1,   '呱' , 'null', 1, 10, 0);
-INSERT INTO `Course` VALUES ('050',  '計' , 10, 1, 1,    '呱呱', 'null', 2, 10, 0);
-INSERT INTO `Course` VALUES ('051',  '學', 10, 1, 1,     '呱呱呱'  , 'null', 3, 10, 0);
+INSERT INTO `Course` VALUES ('049',  '統記學'  , 10, 1, 1,   '呱' , 'null', 1, 10, 0);
+INSERT INTO `Course` VALUES ('050',  '計算機概論' , 10, 0, 1,    '呱呱', 'null', 2, 10, 0);
+INSERT INTO `Course` VALUES ('051',  '國文', 10, 1, 1,     '呱呱呱'  , 'null', 3, 10, 0);
 
 INSERT INTO `CourseTime` VALUES ('025', '2', '2');
 INSERT INTO `CourseTime` VALUES ('025', '2', '3');
