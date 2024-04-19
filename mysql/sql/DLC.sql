@@ -128,3 +128,9 @@ INSERT INTO `COURSE_RATE` VALUES ('048', 0, 'comment'       ,0);
 INSERT INTO `COURSE_RATE` VALUES ('049', 0, 'comment'       ,0);
 INSERT INTO `COURSE_RATE` VALUES ('050', 0, 'comment'       ,0);
 INSERT INTO `COURSE_RATE` VALUES ('051', 0, 'comment'       ,0);
+
+CREATE TABLE  `WAITLIST` (
+    `course_id` VARCHAR (10) NOT NULL,
+    `student_id` VARCHAR (10) NOT NULL,
+    PRIMARY KEY (`course_id`, `student_id`)
+);

@@ -1,7 +1,7 @@
 # 0415
 import MySQLdb
 from flask import url_for,jsonify,redirect,render_template,Flask, request
-
+import random
 # 存放登入成功id
 logged_in_user_id = None
 
@@ -253,6 +253,18 @@ def withdraw_courses():
                 cursor.execute("DELETE FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
                 cursor.execute("UPDATE Course set curNumOfSelect  = curNumOfSelect - 1 where  course_id = %s;", (course_id,))
                 conn.commit()  # 提交事務
+                
+                # 檢查等待名單是否有學生在等待這門課
+                cursor.execute("SELECT student_id FROM Waitlist WHERE course_id = %s;", (course_id,))
+                waitlist = cursor.fetchall()
+                waitlist = tuple(record['student_id'] for record in waitlist)
+                if len(waitlist) > 0:
+                    # 從等待名單中選擇一個學生並將他們添加到已選課程中
+                    selected_student = random.choice(waitlist)
+                    cursor.execute("DELETE FROM Waitlist WHERE course_id = %s AND student_id = %s;", (course_id, selected_student))
+                    cursor.execute("INSERT INTO selectedcourse (course_id, student_id) VALUES (%s, %s);", (course_id, selected_student))
+                    cursor.execute("UPDATE Course set curNumOfSelect  = curNumOfSelect + 1 where  course_id = %s;", (course_id,))
+                    conn.commit()
                 return jsonify({"message": "Course withdrawn successfully."})
         else:
             return jsonify({"error": "Course not found or not selected by the current user."}), 404
@@ -281,6 +293,17 @@ def withdraw_courses_without_check():
             cursor.execute("DELETE FROM selectedcourse WHERE course_id = %s AND student_id = %s;", (course_id, logged_in_user_id,))
             cursor.execute("UPDATE Course set curNumOfSelect  = curNumOfSelect - 1 where  course_id = %s;", (course_id,))
             conn.commit()  # 提交事務
+            # 檢查等待名單是否有學生在等待這門課
+            cursor.execute("SELECT student_id FROM Waitlist WHERE course_id = %s;", (course_id,))
+            waitlist = cursor.fetchall()
+            waitlist = tuple(record['student_id'] for record in waitlist)
+            if len(waitlist) > 0:
+                # 從等待名單中選擇一個學生並將他們添加到已選課程中
+                selected_student = random.choice(waitlist)
+                cursor.execute("DELETE FROM Waitlist WHERE course_id = %s AND student_id = %s;", (course_id, selected_student))
+                cursor.execute("INSERT INTO selectedcourse (course_id, student_id) VALUES (%s, %s);", (course_id, selected_student))
+                cursor.execute("UPDATE Course set curNumOfSelect  = curNumOfSelect + 1 where  course_id = %s;", (course_id,))
+                conn.commit()
             return jsonify({"message": "Course withdrawn successfully."})
         else:
             return jsonify({"error": "Course not found or not selected by the current user."}), 404
@@ -349,10 +372,6 @@ def add_course():
         # 如果學生不是該系所的學生
         print("Not a student of the department")
         return jsonify({"success": False, "error": "Not a student of the department"})
-    elif is_course_of_capacity(course_id):
-        # 如果課程人數已滿
-        print("Course is full")
-        return jsonify({"success": False, "error": "Course is full"})
     elif not is_course_time_conflict(course_id, logged_in_user_id):
         # 如果課程時間有衝突
         print("Course time conflict")
@@ -369,6 +388,15 @@ def add_course():
         # 如果不符合課程擋修限制
         print("You don't qualify the course blocking restrictions")
         return jsonify({"success": False, "error": "You don't qualify the course blocking restrictions"})
+    elif is_course_of_capacity(course_id):
+        # 如果課程人數已滿
+        print("Course is full,add to waitlist")
+        # insert into waitlist
+        insert_query = "INSERT INTO Waitlist (course_id, student_id) VALUES (%s, %s)"
+        cursor = conn.cursor()
+        cursor.execute(insert_query, (course_id, logged_in_user_id))
+        conn.commit()
+        return jsonify({"success": False, "error": "Course is full,add to waitlist"})
     else:
         # 插入課程ID和學生ID
         try:
