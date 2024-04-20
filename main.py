@@ -643,3 +643,29 @@ def to_rate(course_id):
         conn.close()
         return redirect(url_for('course_selection'))
     return render_template('to_rate.html', course_id=course_id)
+#進階搜尋
+@app.route('/searchmore', methods=['GET', 'POST'])
+def searchmore():
+    if request.method == 'POST':
+        conn = sql_log()
+        c = conn.cursor()
+        # 從表單中獲取選擇的時間和年級
+        selected_times = request.form.getlist('time')
+        selected_grades = request.form.getlist('grade')
+
+        # 在這裡，你可以將這些數據存儲到 SQL 資料庫中，進行進一步的處理
+        # 這裡僅是示例，假設你已經有了一個名為 db 的資料庫連接對象
+        # 你可以使用適合的方式將數據存儲到資料庫中
+        for time in selected_times:
+            # 假設有一個名為 times 的資料表，包含 id 和 time 兩個欄位
+            c.execute("INSERT INTO times (time) VALUES (?)", (time,))
+        
+        for grade in selected_grades:
+            # 假設有一個名為 grades 的資料表，包含 id 和 grade 兩個欄位
+            c.execute("INSERT INTO grades (grade) VALUES (?)", (grade,))
+        
+        # 提交資料庫操作
+        c.commit()
+
+        # 在此處可以進行其他處理，例如重新導向到其他頁面
+        return '表單已提交'
