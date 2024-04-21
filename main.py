@@ -669,3 +669,50 @@ def searchmore():
 
         # 在此處可以進行其他處理，例如重新導向到其他頁面
         return '表單已提交'
+@app.route('/get_courses2', methods=['POST'])
+def get_courses2():
+    # 從course的表單獲取選擇的系所 id
+    selected_department_name = request.form['course']
+    if request.form['time']:
+        selected_time = request.form['time']
+    else:
+        selected_time = 'time_index'
+    if request.form['week']:
+        selected_week = request.form['week']
+    else:
+        selected_week = 'week_day'
+    if request.form['credit']:
+        selected_credit = request.form['credit']
+    else:
+        selected_credit = 'credit'
+    department_id = int(selected_department_name) + 1
+    # 測試是否獲取到系所 id
+    print("Selected department2 name:", department_id)
+    print(selected_time + "\n" + selected_week + "\n" + selected_credit)  
+    conn = sql_log()
+    # 建立 cursor 物件 - 字典
+    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+    # 運用 SQL 語法查詢該系所的 id
+    cursor.execute("SELECT Course.department_id FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (department_id,selected_week,selected_credit,selected_time,))
+    dept_result = cursor.fetchone()  
+    # 有無找到相關資訊
+    if dept_result:
+        dept_id = dept_result['department_id'] 
+        cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_credit,selected_time,))
+        courses = cursor.fetchall()
+
+        # 對每門課程進行處理，獲取該課程的上課時間
+        for course in courses:
+            course_id = course['course_id']
+            # 從 CourseTime 表中查詢該課程的上課時間
+            cursor.execute("SELECT week_day, time_index FROM CourseTime WHERE course_id = %s", (course_id,))
+            course_times = cursor.fetchall()
+            # 將查詢到的上課時間資料加入到課程的字典中
+            course['course_times'] = course_times
+            print(course)
+
+        return jsonify(courses)
+    else:
+        error_msg = {"error": "Course not found"}
+        return jsonify(error_msg), 404
+    
