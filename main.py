@@ -667,27 +667,27 @@ def get_courses2():
     # 建立 cursor 物件 - 字典
     cursor = conn.cursor(MySQLdb.cursors.DictCursor)
     # 運用 SQL 語法查詢該系所的 id
-    cursor.execute("SELECT Course.department_id FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (department_id,selected_week,selected_credit,selected_time,))
+    cursor.execute("SELECT Course.department_id FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s ;", (department_id,))
     dept_result = cursor.fetchone()  
     # 有無找到相關資訊
     if dept_result:
         dept_id = dept_result['department_id'] 
-        if selected_time == "0":
-            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s;", (dept_id,selected_week,selected_credit,))
-        elif selected_credit == "0":
-            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_time,))
-        elif selected_week == "0":
-            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_credit,selected_time,))
-        elif selected_credit == "0" and selected_time == "0":
-            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s ;", (dept_id,selected_week,))
-        elif selected_week == "0" and selected_time == "0":
-            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND Course.credit = %s;", (dept_id,selected_credit,))
-        elif selected_credit == "0" and selected_week == "0":
-                    cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.time_index = %s;", (dept_id,selected_time,))
-        elif selected_week == "0" and selected_credit == "0" and selected_time == "0":
-            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s ;", (dept_id,))
-        else:
-            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_credit,selected_time,))
+        if (selected_week == '0' and selected_credit == '0') and selected_time == '0':#all/all/all
+            cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s ;", (dept_id,))
+        elif selected_credit == '0' and selected_week == '0':#all/all/time
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.time_index = %s;", (dept_id,selected_time,))
+        elif selected_credit == '0' and selected_time == '0':#week/all/all
+            cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s;", (dept_id,selected_week,))
+        elif selected_week == '0' and selected_time == '0':  #all/credit/all
+            cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND Course.credit = %s;", (dept_id,selected_credit,))
+        elif selected_week == '0':                         #all/cerdit/time
+            cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_credit,selected_time,))
+        elif selected_credit == '0':                       #week/all/time
+            cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_time,))
+        elif selected_time == '0':                         #week/cerdit/all
+            cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s;", (dept_id,selected_week,selected_credit,))
+        else:                                              #week/cerdit/time
+            cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_credit,selected_time,))
         courses = cursor.fetchall()
 
         # 對每門課程進行處理，獲取該課程的上課時間
