@@ -646,17 +646,17 @@ def to_rate(course_id):
 @app.route('/get_courses2', methods=['POST'])
 def get_courses2():
     # 從course的表單獲取選擇的系所 id
-    selected_department_name = request.form['course']
+    selected_department_name = request.form.get('course')
     if request.form['time']:
-        selected_time = request.form['time']
+        selected_time = request.form.get('time')
     else:
         selected_time = 'time_index'
     if request.form['week']:
-        selected_week = request.form['week']
+        selected_week = request.form.get('week')
     else:
         selected_week = 'week_day'
     if request.form['credit']:
-        selected_credit = request.form['credit']
+        selected_credit = request.form.get('credit')
     else:
         selected_credit = 'credit'
     department_id = int(selected_department_name) + 1
@@ -672,7 +672,22 @@ def get_courses2():
     # 有無找到相關資訊
     if dept_result:
         dept_id = dept_result['department_id'] 
-        cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_credit,selected_time,))
+        if selected_time == "0":
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s;", (dept_id,selected_week,selected_credit,))
+        elif selected_credit == "0":
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_time,))
+        elif selected_week == "0":
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_credit,selected_time,))
+        elif selected_credit == "0" and selected_time == "0":
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s ;", (dept_id,selected_week,))
+        elif selected_week == "0" and selected_time == "0":
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND Course.credit = %s;", (dept_id,selected_credit,))
+        elif selected_credit == "0" and selected_week == "0":
+                    cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.time_index = %s;", (dept_id,selected_time,))
+        elif selected_week == "0" and selected_credit == "0" and selected_time == "0":
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s ;", (dept_id,))
+        else:
+            cursor.execute("SELECT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_credit,selected_time,))
         courses = cursor.fetchall()
 
         # 對每門課程進行處理，獲取該課程的上課時間
