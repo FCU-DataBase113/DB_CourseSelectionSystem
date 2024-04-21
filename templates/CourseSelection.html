@@ -47,7 +47,10 @@
         <script>
             function showForm() {
                 var Form = document.getElementById('AdvancedSearch');
-                Form.style.display = 'block'; // 顯示選擇顏色的表單
+                if (Form.style.display === 'none')
+                    Form.style.display = 'block'; // 顯示選擇顏色的表單
+                else
+                    Form.style.display = 'none'; // 隱藏選擇顏色的表單
             }
         </script>
     </head>
@@ -96,7 +99,7 @@
                 <input type="radio" name="required" value="1"> 必修
                 <input type="radio" name="required" value="0"> 選修<br>
                 <button type="button" id="submitButton2">選擇</button>
-            </form>
+        </form>
     </body>
     <!-- 顯示課程表格 -->
     <div id="dataDisplay"></div>
@@ -254,8 +257,11 @@
                     }
                 });
             });
+            var isDisplayed = false;
             //進階搜尋
             $("#submitButton2").click(function (event) {
+
+
                 // 防止表單預設的提交行為
                 event.preventDefault();
                 // 發送異步的HTTP請求 發送了一個POST請求到URL為'/get_courses'的後端接口，並將表單數據序列化後作為請求數據

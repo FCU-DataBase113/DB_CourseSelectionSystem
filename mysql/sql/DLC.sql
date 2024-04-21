@@ -63,6 +63,12 @@ INSERT INTO `Course` VALUES ('049',  '統記學'  , 10, 1, 1,   '呱' , 'null', 
 INSERT INTO `Course` VALUES ('050',  '計算機概論' , 10, 0, 1,    '呱呱', 'null', 2, 10, 0);
 INSERT INTO `Course` VALUES ('051',  '國文', 10, 1, 1,     '呱呱呱'  , 'null', 3, 10, 0);
 
+INSERT INTO `Course` VALUES ('052',  '微處理機系統', 3, 1, 3,     '呱呱呱呱'  , 'null', 3, 10, 0);
+INSERT INTO `Course` VALUES ('053',  '進階 C#程式設計', 3, 0, 3,     '呱呱呱呱呱'  , 'null', 3, 10, 0);
+INSERT INTO `Course` VALUES ('054',  '積體電路導論', 3, 0, 3,     '呱呱呱呱呱呱'  , 'null', 3, 10, 0);
+
+
+
 INSERT INTO `CourseTime` VALUES ('025', '2', '2');
 INSERT INTO `CourseTime` VALUES ('025', '2', '3');
 INSERT INTO `CourseTime` VALUES ('025', '2', '4');
@@ -96,6 +102,9 @@ INSERT INTO `CourseTime` VALUES ('048', '2', '3');
 INSERT INTO `CourseTime` VALUES ('049', '2', '6');
 INSERT INTO `CourseTime` VALUES ('050', '3', '2');
 INSERT INTO `CourseTime` VALUES ('051', '2', '3');
+INSERT INTO `CourseTime` VALUES ('052', '2', '6');
+INSERT Into `CourseTime` VALUES ('053', '3', '2');
+INSERT INTO `CourseTime` VALUES ('054', '2', '3');
 
 INSERT INTO `PrerequisiteCourses` (`MainSubject`, `RequiredCourse`) VALUES ('程式設計(二)', '程式設計');
 INSERT INTO `PrerequisiteCourses` (`MainSubject`, `RequiredCourse`) VALUES ('程式設計(三)', '程式設計(二)');
@@ -128,6 +137,9 @@ INSERT INTO `COURSE_RATE` VALUES ('048', 0, 'comment'       ,0);
 INSERT INTO `COURSE_RATE` VALUES ('049', 0, 'comment'       ,0);
 INSERT INTO `COURSE_RATE` VALUES ('050', 0, 'comment'       ,0);
 INSERT INTO `COURSE_RATE` VALUES ('051', 0, 'comment'       ,0);
+INSERT INTO `COURSE_RATE` VALUES ('052', 0, 'comment'       ,0);
+INSERT INTO `COURSE_RATE` VALUES ('053', 0, 'comment'       ,0);
+INSERT INTO `COURSE_RATE` VALUES ('054', 0, 'comment'       ,0);
 
 CREATE TABLE  `WAITLIST` (
     `course_id` VARCHAR (10) NOT NULL,

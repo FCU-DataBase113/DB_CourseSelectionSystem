@@ -28,7 +28,6 @@ def sql_log():
 def index():
     return render_template('index.html')
 
-# 重複帳號需要跳錯誤訊息，重新導向(未完成)
 # 註冊帳號
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -120,6 +119,7 @@ def logout():
     global logged_in_user_id
     logged_in_user_id = None
     return redirect(url_for('index'))
+
 # 建立帳號
 def insert_user(student_id, password, grade, d_id):
     # 建立連接
@@ -314,7 +314,6 @@ def withdraw_courses_without_check():
         cursor.close()
         conn.close()
 
-
 # 顯示該系所的課程
 @app.route('/get_courses', methods=['POST'])
 def get_courses():
@@ -352,7 +351,6 @@ def get_courses():
         return jsonify(error_msg), 404
     
 # 加入課程 
-# todo: 避免不符合條件的課程
 @app.route('/add_course', methods=['POST'])
 def add_course():
     # 聲明全局變量
@@ -581,7 +579,6 @@ def update_schedule():
     schedule_data = get_schedule_data()  # 此函數可以從數據庫中獲取課表數據
     return jsonify(schedule_data)
 
-
 # 尋找課程評分
 @app.route('/rate', methods=['GET', 'POST'])
 def rate():
@@ -611,6 +608,7 @@ def rate():
         return render_template('check_rate.html', course_name=None)
 
     return render_template('check_rate.html', course_name=None)
+
 # 查看選課紀錄
 @app.route('/history', methods=['GET', 'POST'])
 def history():
@@ -626,6 +624,7 @@ def history():
         courses.append(selected_course)
     conn.close()
     return render_template('history.html', courses=courses)
+
 # 進行評分
 @app.route('/to_rate/<string:course_id>', methods=['GET', 'POST'])
 def to_rate(course_id):
