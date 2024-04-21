@@ -643,6 +643,8 @@ def to_rate(course_id):
         conn.close()
         return redirect(url_for('course_selection'))
     return render_template('to_rate.html', course_id=course_id)
+
+# 進階搜尋顯示該系所的課程
 @app.route('/get_courses2', methods=['POST'])
 def get_courses2():
     # 從course的表單獲取選擇的系所 id
@@ -659,10 +661,15 @@ def get_courses2():
         selected_credit = request.form.get('credit')
     else:
         selected_credit = 'credit'
+    if request.form['required']:
+        selected_required = request.form.get('required') 
+    else:
+        selected_required = 'required'
+
     department_id = int(selected_department_name) + 1
     # 測試是否獲取到系所 id
     print("Selected department2 name:", department_id)
-    print(selected_time + "\n" + selected_week + "\n" + selected_credit)  
+    print(selected_time + "\n" + selected_week + "\n" + selected_credit + "\n" + selected_required)  
     conn = sql_log()
     # 建立 cursor 物件 - 字典
     cursor = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -688,7 +695,7 @@ def get_courses2():
             cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s;", (dept_id,selected_week,selected_credit,))
         else:                                              #week/cerdit/time
             cursor.execute("SELECT DISTINCT * FROM Course JOIN CourseTime ON Course.course_id = CourseTime.course_id WHERE Course.department_id = %s AND CourseTime.week_day = %s AND Course.credit = %s AND CourseTime.time_index = %s;", (dept_id,selected_week,selected_credit,selected_time,))
-        courses = cursor.fetchall()
+        courses = cursor.fetchall()        
 
         # 對每門課程進行處理，獲取該課程的上課時間
         for course in courses:
@@ -699,6 +706,14 @@ def get_courses2():
             # 將查詢到的上課時間資料加入到課程的字典中
             course['course_times'] = course_times
             print(course)
+
+        # 判斷是否有選擇必修或選修
+        if selected_required != '2':
+            result_courses = []
+            for course in courses:
+                if str(course['required']) == selected_required:
+                    result_courses.append(course)  # 只有符合条件的课程才被添加到最终列表中
+            return jsonify(result_courses)
 
         return jsonify(courses)
     else:

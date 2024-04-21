@@ -35,11 +35,13 @@
         <button type="button" id="submitButton">選擇</button>
     </form>
     <!--進階搜尋-->
+
     <head>
         <title>Advanced Search Button</title>
         <style>
             #AdvancedSearch {
-                display: none; /* 預設隱藏 */
+                display: none;
+                /* 預設隱藏 */
             }
         </style>
         <script>
@@ -49,6 +51,7 @@
             }
         </script>
     </head>
+
     <body>
         <button type="button" onclick="showForm()">進階搜尋</button>
         <form id="AdvancedSearch" action="/get_courses2" method="POST">
@@ -66,30 +69,34 @@
                 <option value="9">統計學系</option>
             </select>
             <p>星期：
-            <input type="radio" name="week" value="0"> 全
-            <input type="radio" name="week" value="1"> 星期一
-            <input type="radio" name="week" value="2"> 星期二
-            <input type="radio" name="week" value="3"> 星期三
-            <input type="radio" name="week" value="4"> 星期四
-            <input type="radio" name="week" value="5"> 星期五<br>
+                <input type="radio" name="week" value="0" checked> 全
+                <input type="radio" name="week" value="1"> 星期一
+                <input type="radio" name="week" value="2"> 星期二
+                <input type="radio" name="week" value="3"> 星期三
+                <input type="radio" name="week" value="4"> 星期四
+                <input type="radio" name="week" value="5"> 星期五<br>
             <p>節數：
-            <input type="radio" name="time" value="0"> 全
-            <input type="radio" name="time" value="1"> 一
-            <input type="radio" name="time" value="2"> 二
-            <input type="radio" name="time" value="3"> 三
-            <input type="radio" name="time" value="4"> 四
-            <input type="radio" name="time" value="5"> 五
-            <input type="radio" name="time" value="6"> 六
-            <input type="radio" name="time" value="7"> 七
-            <input type="radio" name="time" value="8"> 八<br>
+                <input type="radio" name="time" value="0" checked> 全
+                <input type="radio" name="time" value="1"> 一
+                <input type="radio" name="time" value="2"> 二
+                <input type="radio" name="time" value="3"> 三
+                <input type="radio" name="time" value="4"> 四
+                <input type="radio" name="time" value="5"> 五
+                <input type="radio" name="time" value="6"> 六
+                <input type="radio" name="time" value="7"> 七
+                <input type="radio" name="time" value="8"> 八<br>
             <p>學分：
-            <input type="radio" name="credit" value="0"> 全
-            <input type="radio" name="credit" value="1"> 一
-            <input type="radio" name="credit" value="2"> 二
-            <input type="radio" name="credit" value="3"> 三
-            <input type="radio" name="credit" value="4"> 四<br>
-            <button type="button" id="submitButton2">選擇</button>
-        </form>
+                <input type="radio" name="credit" value="0" checked> 全
+                <input type="radio" name="credit" value="1"> 一
+                <input type="radio" name="credit" value="2"> 二
+                <input type="radio" name="credit" value="3"> 三
+                <input type="radio" name="credit" value="4"> 四<br>
+            <p>必修與否
+                <input type="radio" name="required" value="2" checked> 全
+                <input type="radio" name="required" value="1"> 必修
+                <input type="radio" name="required" value="0"> 選修<br>
+                <button type="button" id="submitButton2">選擇</button>
+            </form>
     </body>
     <!-- 顯示課程表格 -->
     <div id="dataDisplay"></div>
@@ -179,7 +186,7 @@
     <button type="button" id="updateScheduleButton">更新課表</button>
     <!-- 退選頁面按鈕 -->
     <h2>功能</h2>
-    <div class ="button-container">
+    <div class="button-container">
         <form action="/course_deselection" method="GET">
             <button type="submit" id="redirectTowithdrawPage">退選頁面</button>
         </form>
@@ -239,7 +246,7 @@
                             console.log("Time Index:", timeIndex);
                             // 將 button 賦予 data-id 為該課程相對應的 course_id
                             what_course_have += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
-                                '</td><td>' + courses[i].required + '</td><td>' + weekDay + '</td><td>' + timeIndex  + '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
+                                '</td><td>' + courses[i].required + '</td><td>' + weekDay + '</td><td>' + timeIndex + '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
 
                         }
                         // 將動態生成的課程表插入到頁面中
@@ -275,7 +282,7 @@
                             console.log("Time Index:", timeIndex);
                             // 將 button 賦予 data-id 為該課程相對應的 course_id
                             what_course_have += '<tr><td>' + courses[i].course_name + '</td><td>' + courses[i].credit + '</td><td>' + courses[i].grade +
-                                '</td><td>' + courses[i].required + '</td><td>' + weekDay + '</td><td>' + timeIndex  + '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
+                                '</td><td>' + courses[i].required + '</td><td>' + weekDay + '</td><td>' + timeIndex + '</td><td>' + courses[i].description + '</td><td><button data-id="' + courses[i].course_id + '" class="select-course">選擇</button></td></tr>';
 
                         }
                         // 將動態生成的課程表插入到頁面中
@@ -283,6 +290,7 @@
                     }
                 });
             });
+
             // 將所輸入的回傳給後端
             $(document).on('click', '.select-course', function () {
                 // 指定 data-id 為要回傳的值
@@ -308,7 +316,7 @@
                 });
             });
 
-            
+
 
             // 更新課表的table
             function updateSchedule(scheduleData) {
