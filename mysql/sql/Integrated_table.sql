@@ -166,6 +166,7 @@ CREATE TABLE `COURSE_RATE` (
     `comment`           VARCHAR (500),
     `comment_total`    INT
 );
+
 INSERT INTO `COURSE_RATE` VALUES ('001', 4, 'comment::狗都不修',1);
 INSERT INTO `COURSE_RATE` VALUES ('002', 0, 'comment', 0);
 INSERT INTO `COURSE_RATE` VALUES ('003', 0, 'comment', 0);

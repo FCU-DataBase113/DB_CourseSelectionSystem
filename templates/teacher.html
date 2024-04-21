@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='course.css') }}">
+    <title>系統控制</title>
+</head>
+
+<body>
+    <h1>新增課程系統</h1>
+    <form id="course_form" action="/insert_course" method="post">
+        <label>課程ID: <input type="text" name="course_id" placeholder="Course ID" required min="0"></label><br>
+        <label>課程名稱: <input type="text" name="course_name" placeholder="Course Name" required></label><br>
+        <label>系所ID: <input type="number" name="department_id" placeholder="Department ID" required min="0"></label><br>
+        <label>是否必修:
+            <input type="radio" name="required" value="0" required checked> 非必修
+            <input type="radio" name="required" value="1" required> 必修
+        </label><br>
+        <label>學分: <input type="number" name="credit" placeholder="Credit" required></label><br>
+        <label>課程描述: <input type="text" name="description" placeholder="Description"></label><br>
+        <label>先修課程ID: <input type="text" name="prerequisite_id" placeholder="Prerequisite ID"></label><br>
+        <label>年級: <input type="number" name="grade" placeholder="Grade" required min="0" max="4"></label><br>
+        <label>最大選課人數: <input type="number" name="maxNumOfSelect" placeholder="Max Number of Selections" required
+                min="0"></label><br>
+        <label>目前選課人數: <input type="number" name="curNumOfSelect" placeholder="Current Number of Selections" required
+                min="0"></label><br>
+        <label>星期幾: <input type="number" name="week_day" placeholder="Week Day" required min="1" max="5"></label><br>
+        <label>時間段(1~12): <input type="number" name="time_index" placeholder="Time Index" required min="1" max="12"></label><br>
+        <button type="submit">新增課程</button>
+    </form>
+
+    <script>
+        function handleFormSubmit(event) {
+            var password = prompt("請輸入密碼以確認操作：");
+            if (password === "123") {
+                alert("課程添加成功!");
+            } else {
+                event.preventDefault(); // 取消表單提交
+                alert("密碼錯誤，操作已取消。");
+            }
+        }
+    
+        var form = document.getElementById("course_form");
+        form.addEventListener("submit", handleFormSubmit);
+    </script>
+
+</html>

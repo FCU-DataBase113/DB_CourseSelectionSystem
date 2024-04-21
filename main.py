@@ -1,13 +1,15 @@
 # 0415
 import MySQLdb
-from flask import url_for,jsonify,redirect,render_template,Flask, request
+from flask import url_for,jsonify,redirect,render_template,Flask, request, flash
 import random
 # 存放登入成功id
 logged_in_user_id = None
 
 wrong = [0]
 id = [0]
-app = Flask(__name__)
+app = Flask(__name__)   
+# 建立一組密碼
+app.secret_key = '123'
 
 if __name__ == '__main__':
     app.run(debug = True,host = "0.0.0.0",port = 5000)
@@ -718,4 +720,55 @@ def get_courses2():
     else:
         error_msg = {"error": "Course not found"}
         return jsonify(error_msg), 404
-    
+
+# 新增加入課程系統
+@app.route('/teacher')
+def teacher():
+    return render_template('teacher.html')
+
+@app.route('/insert_course', methods=['POST'])
+def insert_course():
+    course_id = request.form['course_id']
+    course_name = request.form['course_name']
+    department_id = request.form['department_id']
+    required = request.form['required']
+    credit = request.form['credit']
+    description = request.form['description']
+    prerequisite_id = request.form['prerequisite_id']
+    grade = request.form['grade']
+    maxNumOfSelect = request.form['maxNumOfSelect']
+    curNumOfSelect = request.form['curNumOfSelect']
+    week_day = request.form['week_day']
+    time_index = request.form['time_index']
+
+    conn = sql_log()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT course_id FROM Course WHERE course_id = %s", (course_id,))
+        if cursor.fetchone():
+            flash('Course ID already exists!', 'error')
+        else:
+            cursor.execute("""
+                INSERT INTO Course (course_id, course_name, department_id, required, credit, 
+                                    description, prerequisite_id, grade, maxNumOfSelect, curNumOfSelect) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (course_id, course_name, department_id, required, credit, description, prerequisite_id, grade, maxNumOfSelect, curNumOfSelect))
+
+            # Insert into CourseTime table
+            cursor.execute("""
+                INSERT INTO CourseTime (course_id, week_day, time_index) 
+                VALUES (%s, %s, %s)
+                """, (course_id, week_day, time_index))
+
+            conn.commit()
+            flash('Course added successfully!', 'success')
+    except MySQLdb.Error as e:
+        conn.rollback()
+        flash('An error occurred while adding the course!', 'error')
+    finally:
+        cursor.close()
+        conn.close()
+
+    return redirect(url_for('teacher'))
+
