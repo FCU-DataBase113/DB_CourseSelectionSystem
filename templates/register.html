@@ -13,7 +13,6 @@
             密碼 :<input type="password" name="password"><br />
             年級 :<input type="text" name="grade"><br />
             <select id="department" name="department">
-                <option>請選擇你的系所</option>
                 {% for class_item in class_list %}
                     <option>{{ class_item }}</option>
                 {% endfor %}
